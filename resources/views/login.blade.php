@@ -267,7 +267,7 @@
                 <div class="text-center">
 
                     <h2 class="login-title">
-                        Selamat Datangs
+                        Selamat Datang
                     </h2>
 
                     <div class="subtitle">
