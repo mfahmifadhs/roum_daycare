@@ -298,7 +298,7 @@
                                 type="date"
                                 class="form-control rounded-3"
                                 name="tanggal"
-                                value="{{ date('Y-m-d') }}"
+                                value="{{ date('Y-m-d', strtotime('+1 day')) }}"
                                 required>
 
                         </div>
