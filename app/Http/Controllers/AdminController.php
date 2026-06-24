@@ -76,6 +76,7 @@ class AdminController extends Controller
         $data->reguler = Reguler::get();
         $data->absen   = Absen::where('tanggal', today())->get();
         $data->jadwal  = Jadwal::where('tanggal', today())->first();
+        $data->kuota   = Kuota::get();
 
         $kuota = new \stdClass();
         $kuota->infant           = $dataKuota->where('kategori', 'infant')->sum('kuota');

@@ -739,6 +739,167 @@
         </div>
 
         <div class="row g-4 mb-4">
+            {{-- Kuota --}}
+            <div class="col-lg-6">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+
+                    <div class="card-header bg-white border-0 p-4 pb-0">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <h5 class="fw-bold mb-1">
+                                    Setting Kuota
+                                </h5>
+
+                                <p class="text-muted mb-0 small">
+                                    Mengatur kuota pendaftaran penitipan
+                                </p>
+
+                            </div>
+
+                            <div class="bg-light-primary rounded-circle d-flex align-items-center justify-content-center"
+                                style="width:48px;height:48px;">
+
+                                <i class="ti ti-users-group text-primary fs-5"></i>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body p-4">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle mb-0">
+
+                                <thead class="table-light">
+
+                                    <tr>
+
+                                        <th width="60">No</th>
+                                        <th>Kategori</th>
+                                        <th width="120">Kuota</th>
+                                        <th width="120" class="text-center">Aksi</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    @forelse ($data->kuota as $index => $kuota)
+
+                                    <tr>
+
+                                        <td>
+
+                                            <span class="fw-semibold text-muted">
+                                                {{ $index + 1 }}
+                                            </span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <div class="d-flex align-items-center">
+
+                                                <div class="bg-light-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                                    style="width:40px;height:40px;">
+
+                                                    <i class="ti ti-baby-carriage text-primary"></i>
+
+                                                </div>
+
+                                                <div>
+
+                                                    <div class="fw-semibold">
+                                                        {{ ucwords($kuota->kategori.' '.$kuota->tipe) }}
+                                                    </div>
+
+                                                    <small class="text-muted">
+                                                        {{ ucfirst($kuota->jenis_kelamin == 'L' ? 'laki-laki' : ($kuota->jenis_kelamin == 'P' ? 'perempuan' : '-')) }}
+                                                    </small>
+
+                                                </div>
+
+                                            </div>
+
+                                        </td>
+
+                                        <td>
+
+                                            <span class="badge bg-light-success text-success px-3 py-2 rounded-pill">
+
+                                                {{ $kuota->kuota }} Slot
+
+                                            </span>
+
+                                        </td>
+
+                                        <td class="text-center">
+
+                                            <button
+                                                class="btn btn-sm btn-primary rounded-pill px-3"
+                                                onclick="editKuota(
+                                                    '{{ $kuota->id }}',
+                                                    '{{ ucfirst($kuota->kategori) }}',
+                                                    '{{ $kuota->kuota }}'
+                                                )">
+
+                                                <i class="ti ti-edit me-1"></i>
+                                                Edit
+
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <form id="form-kuota-{{ $kuota->id }}" action="{{ route('kuota.update', $kuota->id) }}" method="POST">
+                                        @csrf
+
+                                        <input type="hidden" name="kuota" id="kuota-{{ $kuota->id }}">
+                                    </form>
+
+                                    @empty
+
+                                    <tr>
+
+                                        <td colspan="4" class="text-center py-5">
+
+                                            <i class="ti ti-inbox fs-1 text-muted d-block mb-2"></i>
+
+                                            <span class="text-muted">
+
+                                                Belum ada data kuota
+
+                                            </span>
+
+                                        </td>
+
+                                    </tr>
+
+                                    @endforelse
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
 
             <div class="col-12">
 
@@ -2040,6 +2201,100 @@
                 document.body.appendChild(form);
 
                 form.submit();
+            }
+
+        });
+
+    }
+</script>
+
+<script>
+    function editKuota(id, kategori, kuota) {
+
+        Swal.fire({
+
+            title: 'Edit Kuota',
+
+            html: `
+                <div class="text-start">
+
+                    <label class="form-label fw-semibold">
+                        Kategori
+                    </label>
+
+                    <input type="text"
+                        class="form-control mb-3"
+                        value="${kategori}"
+                        readonly>
+
+                    <label class="form-label fw-semibold">
+                        Kuota
+                    </label>
+
+                    <input type="number"
+                        id="inputKuota"
+                        class="form-control"
+                        value="${kuota}"
+                        min="0">
+
+                </div>
+            `,
+
+            showCancelButton: true,
+
+            confirmButtonText: 'Simpan',
+            cancelButtonText: 'Batal',
+
+            confirmButtonColor: '#0d6efd',
+
+            customClass: {
+                popup: 'border-0 rounded-4 shadow-sm'
+            },
+
+            preConfirm: () => {
+
+                const value = document.getElementById(
+                    'inputKuota'
+                ).value;
+
+                if (!value || value < 0) {
+
+                    Swal.showValidationMessage(
+                        'Kuota harus diisi'
+                    );
+
+                    return false;
+                }
+
+                return value;
+            }
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                document.getElementById(
+                    'kuota-' + id
+                ).value = result.value;
+
+                Swal.fire({
+
+                    title: 'Memproses...',
+
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+
+                    showConfirmButton: false,
+
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+
+                });
+
+                document.getElementById(
+                    'form-kuota-' + id
+                ).submit();
             }
 
         });

@@ -12,6 +12,7 @@ use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PengasuhController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SkriningController;
 use App\Http\Controllers\UkerController;
 use App\Http\Controllers\UsersController;
@@ -25,6 +26,9 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('login');
 })->name('login');
+
+Route::get('absen', [AbsenController::class, 'index'])->name('absen');
+Route::post('absen', [AbsenController::class, 'store'])->name('absen.store');
 
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('login', [AuthController::class, 'post'])->name('login.post');
@@ -83,7 +87,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('jadwal/update/{id}',           [JadwalController::class, 'update'])->name('jadwal.update');
 
     Route::get('absen/detail/{id}', [Absen::class, 'detail'])->name('absen.detail');
-    Route::post('absen/store',      [AbsenController::class, 'store'])->name('absen.store');
+    // Route::post('absen/store',      [AbsenController::class, 'store'])->name('absen.store');
 
     Route::get('laporan/edit/{id}',    [LaporanController::class, 'edit'])->name('laporan.edit');
     Route::get('laporan/create/{id}',  [LaporanController::class, 'create'])->name('laporan.create');
@@ -91,8 +95,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('laporan/store/{id}',  [LaporanController::class, 'store'])->name('laporan.store');
     Route::post('laporan/update/{id}', [LaporanController::class, 'update'])->name('laporan.update');
 
-    
     Route::get('peserta/detail',  [PesertaController::class, 'detail'])->name('peserta.detail');
+
+    Route::post('kuota/update/{id}',  [SettingController::class, 'updateKuota'])->name('kuota.update');
     
 
 });

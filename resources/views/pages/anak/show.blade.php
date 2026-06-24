@@ -108,7 +108,9 @@
                                 <td><h6 class="mb-0">{{ $data->nama }}</h6></td>
                                 <td>{{ $data->jenis_kelamin == 'P' ? 'Perempuan' : 'Laki=laki' }}</td>
                                 <td>[{{ $data->tempat_lahir }}, {{ Carbon\Carbon::parse($data->tanggal_lahir)->isoFormat('DD MMMM Y') }}]</td>
-                                <td>{{ \Carbon\Carbon::parse($data->tanggal_lahir)->diff(now())->y }} tahun</td>
+                                <td>{{ \Carbon\Carbon::parse($data->tanggal_lahir)->diff(now())->y }} tahun
+                                    ({{ round(\Carbon\Carbon::parse($data->tanggal_lahir)->diffInMonths(now())) }} bulan)
+                                </td>
                                 <td>{{ $data->user->nama }}</td>
                                 <td>{{ $data->user->uker->nama_uker }}</td>
                             </tr>

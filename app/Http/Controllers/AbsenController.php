@@ -11,6 +11,16 @@ use Illuminate\Http\Request;
 
 class AbsenController extends Controller
 {
+    public function index()
+    {
+        $dataAbsen = Absen::with('anak.user')
+        ->whereDate('created_at', Carbon::today())
+        ->latest()
+        ->get();
+
+        return view('absen', compact('dataAbsen'));
+    }
+
     public function store(Request $request)
     {
         $kode = $request->kode;
@@ -48,6 +58,9 @@ class AbsenController extends Controller
             ->where('anak_id', $anak->id)
             ->whereNull('status')
             ->first();
+
+        
+        dd($jadwalHariIni);
 
         if (!$jadwalHariIni) {
 
