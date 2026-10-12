@@ -242,7 +242,7 @@
                             <thead>
 
                                 <tr>
-
+                                    <th>No</th>
                                     <th>Nama Anak</th>
                                     <th>Orang Tua</th>
                                     <th>Datang</th>
@@ -258,7 +258,7 @@
                                 @forelse($dataAbsen as $item)
 
                                 <tr>
-
+                                    <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>
 
                                         {{ $item->anak->nama }}

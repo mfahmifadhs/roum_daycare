@@ -365,247 +365,118 @@
             <div class="col-md-4 col-12">
                 <div class="row">
                     <div class="col-md-12">
+                        @php
+                        use Carbon\Carbon;
+
+                        $tanggalHariIni = Carbon::today();
+                        $waktuDatang = $absen->check_in ?? null;
+                        $waktuKeluar = $absen->check_out ?? null;
+
+                        if ($waktuKeluar) {
+                        $statusKehadiran = 'Sudah Pulang';
+                        $statusClass = 'success';
+                        $statusIcon = 'ti ti-check';
+                        } elseif ($waktuDatang) {
+                        $statusKehadiran = 'Sudah Datang';
+                        $statusClass = 'primary';
+                        $statusIcon = 'ti ti-user-check';
+                        } else {
+                        $statusKehadiran = 'Belum Datang';
+                        $statusClass = 'secondary';
+                        $statusIcon = 'ti ti-clock';
+                        }
+                        @endphp
+
                         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-
                             <div class="card-body p-4">
-
-                                <div class="d-flex align-items-start justify-content-between flex-wrap gap-4">
-
-                                    {{-- CONTENT --}}
+                                <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
                                     <div>
-
-                                        <div class="bg-light-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                                            style="width:70px;height:70px;">
-
-                                            <i class="ti ti-calendar-plus text-success"
-                                                style="font-size:34px;"></i>
-
-                                        </div>
-
-                                        <h4 class="fw-bold mb-2">
-                                            Pendaftaran Penitipan Anak
-                                        </h4>
-
-                                        <p class="text-muted mb-4"
-                                            style="max-width:700px; line-height:1.7;">
-
-                                            Seluruh orang tua yang telah melakukan pendataan anak
-                                            wajib mengikuti proses pendaftaran penitipan reguler
-                                            sebelum dapat menggunakan layanan daycare.
-
-                                        </p>
-
-                                        @if ($anak)
-                                        @if (!$anak->paketReguler && $total->sisa != 0)
-                                        <button type="button"
-                                            class="btn btn-success rounded-pill px-4 shadow-sm"
-                                            onclick="pilihPaket('{{ $anak->id }}')">
-
-                                            <i class="ti ti-arrow-right me-1"></i>
-                                            Daftar Penitipan
-
-                                        </button>
-
-                                        @elseif (!$anak->paketReguler && $total->sisa == 0)
-                                        <button type="button" class="btn btn-danger rounded-pill px-4 shadow-sm" disabled>
-                                            <i class="ti ti-alert-circle me-1"></i>
-                                            Kuota Penuh
-                                        </button>
-                                        @else
-
-                                        <div class="mt-4">
-
-                                            <div class="d-flex flex-column gap-4">
-
-                                                {{-- STEP 1 --}}
-                                                <div class="d-flex align-items-start">
-
-                                                    <div class="me-3">
-
-                                                        <div class="rounded-circle d-flex align-items-center justify-content-center
-                                    {{ $anak && $anak->paketReguler->status ? 'bg-success text-white' : 'bg-light text-muted' }}"
-                                                            style="width:45px;height:45px;">
-
-                                                            <i class="ti ti-check"></i>
-
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div>
-
-                                                        <h6 class="fw-bold mb-1">
-                                                            Verifikasi Administrasi
-                                                        </h6>
-
-                                                        <p class="text-muted mb-0 small">
-
-                                                            Data anak dan dokumen sedang diverifikasi oleh admin daycare
-
-                                                        </p>
-
-                                                    </div>
-
-                                                </div>
-
-                                                {{-- STEP 2 --}}
-                                                <div class="d-flex align-items-start">
-
-                                                    <div class="me-3">
-
-                                                        <div class="rounded-circle d-flex align-items-center justify-content-center
-                                    {{ $anak && $anak->paketReguler->tanggal_wawancara ? 'bg-warning text-white' : 'bg-light text-muted' }}"
-                                                            style="width:45px;height:45px;">
-
-                                                            <i class="ti ti-users"></i>
-
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div>
-
-                                                        <h6 class="fw-bold mb-1">
-                                                            Wawancara Orang Tua
-                                                        </h6>
-
-                                                        <p class="text-muted mb-1 small">
-
-                                                            @if ($anak && $anak->paketReguler->tanggal_wawancara)
-
-                                                            Jadwal wawancara:
-                                                            <span class="fw-semibold text-dark">
-
-                                                                {{ \Carbon\Carbon::parse($anak->paketReguler->tanggal_wawancara)->translatedFormat('d F Y') }}
-
-                                                            </span>
-
-                                                            @else
-
-                                                            Menunggu jadwal wawancara
-
-                                                            @endif
-
-                                                        </p>
-
-                                                    </div>
-
-                                                </div>
-
-                                                {{-- STEP 3 --}}
-                                                <div class="d-flex align-items-start">
-
-                                                    <div class="me-3">
-
-                                                        @php
-
-                                                        $status = $anak && $anak->paketReguler->status;
-
-                                                        $bg = 'bg-light text-muted';
-                                                        $icon = 'ti ti-clock';
-
-                                                        if ($status == 'lolos') {
-                                                        $bg = 'bg-success text-white';
-                                                        $icon = 'ti ti-check';
-                                                        }
-
-                                                        if ($status == 'ditolak') {
-                                                        $bg = 'bg-warning text-white';
-                                                        $icon = 'ti ti-alert-circle';
-                                                        }
-
-                                                        if ($status == 'tms') {
-                                                        $bg = 'bg-danger text-white';
-                                                        $icon = 'ti ti-x';
-                                                        }
-
-                                                        @endphp
-
-                                                        <div class="rounded-circle d-flex align-items-center justify-content-center {{ $bg }}"
-                                                            style="width:45px;height:45px;">
-
-                                                            <i class="{{ $icon }}"></i>
-
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div>
-
-                                                        <h6 class="fw-bold mb-1">
-                                                            Hasil Pendaftaran
-                                                        </h6>
-
-                                                        <p class="mb-2 small">
-
-                                                            @if ($status == 'pending')
-
-                                                            <span class="text-muted">
-
-                                                                Proses seleksi sedang berlangsung
-
-                                                            </span>
-
-                                                            @elseif ($status == 'lolos')
-
-                                                            <span class="text-success fw-semibold">
-
-                                                                Selamat, anak dinyatakan lolos penitipan reguler
-
-                                                            </span>
-
-                                                            @elseif ($status == 'ditolak')
-
-                                                            <span class="text-warning fw-semibold">
-
-                                                                Pendaftaran reguler ditolak.
-                                                                Masih dapat menggunakan penitipan harian.
-
-                                                            </span>
-
-                                                            @elseif ($status == 'tms')
-
-                                                            <span class="text-danger fw-semibold">
-
-                                                                Tidak memenuhi syarat penitipan daycare.
-
-                                                            </span>
-
-                                                            @endif
-
-                                                        </p>
-
-                                                        {{-- HARIAN --}}
-                                                        @if ($status == 'ditolak')
-
-                                                        <button type="button"
-                                                            class="btn btn-light rounded-pill px-4 shadow-sm"
-                                                            onclick="konfirmasiPenitipanHarian('{{ $anak->id }}')">
-
-                                                            <i class="ti ti-clock-hour-4 me-1"></i>
-                                                            Daftar Penitipan Harian
-
-                                                        </button>
-
-                                                        @endif
-
-                                                    </div>
-
-                                                </div>
-
+                                        <div class="d-flex align-items-center gap-3 mb-3">
+                                            <div class="bg-light-success rounded-circle d-inline-flex align-items-center justify-content-center"
+                                                style="width:64px;height:64px;flex-shrink:0;">
+                                                <i class="ti ti-calendar-check text-success" style="font-size:32px;"></i>
                                             </div>
-
+                                            <div>
+                                                <h4 class="fw-bold mb-1">Kehadiran Anak</h4>
+                                                <div class="text-muted">
+                                                    <i class="ti ti-calendar-event me-1"></i>
+                                                    {{ $tanggalHariIni->translatedFormat('l, d F Y') }}
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        @endif
-                                        @endif
-
                                     </div>
 
+                                    <span class="badge rounded-pill bg-{{ $statusClass }}-subtle text-{{ $statusClass }} px-3 py-2 my-3">
+                                        <i class="{{ $statusIcon }} me-1"></i>
+                                        {{ $statusKehadiran }}
+                                    </span>
                                 </div>
 
-                            </div>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="border rounded-4 p-3 h-100">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="rounded-3 bg-light-success text-success d-flex align-items-center justify-content-center"
+                                                    style="width:48px;height:48px;flex-shrink:0;">
+                                                    <i class="ti ti-login-2" style="font-size:25px;"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="text-muted small mb-1">Waktu Datang</div>
+                                                    <div class="fs-4 fw-bold text-dark">
+                                                        {{ $waktuDatang ? Carbon::parse($waktuDatang)->format('H:i') : '--:--' }}
+                                                        <span class="fs-6 fw-normal text-muted">WIB</span>
+                                                    </div>
+                                                    <div class="small {{ $waktuDatang ? 'text-success' : 'text-muted' }}">
+                                                        {{ $waktuDatang ? 'Kedatangan tercatat' : 'Belum ada catatan kedatangan' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <div class="col-md-6">
+                                        <div class="border rounded-4 p-3 h-100">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="rounded-3 bg-light-primary text-primary d-flex align-items-center justify-content-center"
+                                                    style="width:48px;height:48px;flex-shrink:0;">
+                                                    <i class="ti ti-logout-2" style="font-size:25px;"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="text-muted small mb-1">Waktu Keluar</div>
+                                                    <div class="fs-4 fw-bold text-dark">
+                                                        {{ $waktuKeluar ? Carbon::parse($waktuKeluar)->format('H:i') : '--:--' }}
+                                                        <span class="fs-6 fw-normal text-muted">WIB</span>
+                                                    </div>
+                                                    <div class="small {{ $waktuKeluar ? 'text-primary' : 'text-muted' }}">
+                                                        {{ $waktuKeluar ? 'Kepulangan tercatat' : 'Belum ada catatan kepulangan' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @if ($data->laporan)
+                                    <hr>
+                                    <div class="col-md-12">
+                                        <a href="{{ route('laporan.detail', $laporan->id) }}" class="btn btn-success">
+                                            Hasil Penilaian
+                                        </a>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                @if (!$waktuDatang)
+                                <div class="alert alert-light border rounded-3 mt-3 mb-0 small">
+                                    <i class="ti ti-info-circle me-1"></i>
+                                    Data kehadiran akan ditampilkan setelah kedatangan anak dicatat oleh petugas daycare.
+                                </div>
+                                @elseif ($waktuDatang && !$waktuKeluar)
+                                <div class="alert alert-light border rounded-3 mt-3 mb-0 small">
+                                    <i class="ti ti-info-circle me-1"></i>
+                                    Anak sudah tercatat datang dan belum tercatat pulang.
+                                </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

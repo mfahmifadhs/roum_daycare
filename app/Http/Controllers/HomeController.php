@@ -6,6 +6,8 @@ use App\Models\Jadwal;
 use App\Models\Kuota;
 use App\Models\Reguler;
 use App\Models\User;
+use App\Models\Absen;
+use App\Models\Laporan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth as Auth;
@@ -30,13 +32,24 @@ class HomeController extends Controller
             ? collect()
             : Jadwal::whereDate('tanggal', $besok)->get();
 
+        $absen = Absen::where('anak_id', $anak->id)
+            ->whereDate('tanggal', today())
+            ->first();
+
+        $laporan = Laporan::where('anak_id', $anak->id)
+            ->whereDate('tanggal', today())
+            ->first();
+
 
         $total = new \stdClass();
         $total->kuota   = Kuota::where('tipe', 'reguler')->sum('kuota');
         $total->peserta = Reguler::where('status', 'true')->count();
         $total->sisa    = max($total->kuota - $total->peserta, 0);
 
-        return view('pages.home', compact('anak', 'jadwal', 'kategoriAnak', 'total'));
+        $data = new \stdClass();
+        $data->laporan = $laporan ?? null;
+
+        return view('pages.home', compact('anak', 'jadwal', 'kategoriAnak', 'total', 'absen', 'laporan'));
     }
 
     public function profile()

@@ -24,7 +24,7 @@
 
                     <div class="col-md-4 text-md-end mt-3 mt-md-0">
 
-                        <a href="{{ route('jadwal.detail', $laporan->jadwal_id) }}"
+                        <a href="{{ url()->previous() }}"
                             class="btn btn-light rounded-pill px-4">
 
                             <i class="ti ti-arrow-left me-1"></i>

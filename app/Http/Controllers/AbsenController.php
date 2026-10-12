@@ -6,6 +6,8 @@ use App\Models\Absen;
 use App\Models\Anak;
 use App\Models\Penalti;
 use App\Models\Peserta;
+use App\Models\Jadwal;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,7 @@ class AbsenController extends Controller
     public function index()
     {
         $dataAbsen = Absen::with('anak.user')
-        ->whereDate('created_at', Carbon::today())
+        ->whereDate('check_in', Carbon::today())
         ->latest()
         ->get();
 
@@ -23,9 +25,12 @@ class AbsenController extends Controller
 
     public function store(Request $request)
     {
-        $kode = $request->kode;
+        $kode       = $request->kode;
+        $tanggal    = Carbon::today()->toDateString();
+        $anak       = Anak::where('kode', $kode)->first();
+        $jadwal     = Jadwal::whereDate('tanggal', $tanggal)->first();
+        $peserta    = Peserta::where('jadwal_id', $jadwal->id)->where('anak_id', $anak->id)->first();
 
-        $anak = Anak::where('kode', $kode)->first();
 
         if (!$anak) {
             return back()->with(
@@ -46,36 +51,33 @@ class AbsenController extends Controller
         }
 
         // CEK TERDAFTAR HARI INI
-        $jadwalHariIni = Peserta::whereHas(
-            'jadwal',
-            function ($q) {
-                $q->whereDate(
-                    'tanggal',
-                    today()
-                );
-            }
-        )
-            ->where('anak_id', $anak->id)
-            ->whereNull('status')
-            ->first();
+        // $jadwalHariIni = Peserta::whereHas(
+        //     'jadwal',
+        //     function ($q) {
+        //         $q->whereDate(
+        //             'tanggal',
+        //             today()
+        //         );
+        //     }
+        // )
+        //     ->where('anak_id', $anak->id)
+        //     ->whereNull('status')
+        //     ->first();
 
-        
-        dd($jadwalHariIni);
+        // if (!$jadwalHariIni) {
 
-        if (!$jadwalHariIni) {
+        //     return back()->with(
+        //         'error',
+        //         'Peserta tidak terdaftar hari ini'
+        //     );
+        // }
 
-            return back()->with(
-                'error',
-                'Peserta tidak terdaftar hari ini'
-            );
-        }
-
-        $peserta = Peserta::where('jadwal_id', $jadwalHariIni->id)->first();
+        // $peserta = Peserta::where('jadwal_id', $jadwalHariIni->id)->first();
 
         $cekAbsen = Absen::where('tanggal', today())->where('anak_id', $anak->id)->first();
 
         // CEK KEHADIRAN
-        if (!$cekAbsen && $jadwalHariIni) {
+        if (!$cekAbsen) {
             $absenId = Absen::withTrashed()->count() + 1;
             Absen::firstOrCreate(
                 [
@@ -93,11 +95,18 @@ class AbsenController extends Controller
             );
 
             if (now()->gt(today()->setTime(8, 0))) {
+                
                 Absen::where('id', $absenId)->update([
                     'status_checkin' => 'terlambat'
                 ]);
             }
 
+            if ($peserta && !$peserta->waktu_masuk) {
+                Peserta::where('id', $peserta->id)->update([
+                    'tanggal' => now(),
+                    'waktu_masuk' => now()
+                ]);
+            }
 
             return back()->with(
                 'success',
@@ -108,7 +117,6 @@ class AbsenController extends Controller
 
         // CHECK OUT
         if (now()->gte(today()->setTime(14, 58))) {
-
             if ($cekAbsen->check_in && !$cekAbsen->check_out) {
 
                 Absen::where('id', $cekAbsen->id)->update([
@@ -129,6 +137,13 @@ class AbsenController extends Controller
                     $penalti->tanggal_selesai = now()->addDay();
                     $penalti->alasan = 'terlambat pengambilan';
                     $penalti->save();
+                }
+
+                
+                if ($peserta && !$peserta->waktu_keluar) {
+                    Peserta::where('id', $peserta->id)->update([
+                        'waktu_keluar' => now()
+                    ]);
                 }
 
                 return back()->with(

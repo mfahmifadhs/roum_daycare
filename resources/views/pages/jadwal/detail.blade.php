@@ -327,7 +327,7 @@
 
                                                     <span class="fw-medium">
 
-                                                        {{ $item->waktu_masuk ? \Carbon\Carbon::parse($item->waktu_masuk)->format('H:i') : '-' }}
+                                                        {{ $item->check_in ? \Carbon\Carbon::parse($item->check_in)->format('H:i') : '-' }}
 
                                                     </span>
 
@@ -342,7 +342,7 @@
 
                                                     <span class="fw-medium">
 
-                                                        {{ $item->waktu_keluar ? \Carbon\Carbon::parse($item->waktu_keluar)->format('H:i') : '-' }}
+                                                        {{ $item->check_out ? \Carbon\Carbon::parse($item->check_out)->format('H:i') : '-' }}
 
                                                     </span>
 
@@ -358,7 +358,7 @@
                                     <div class="d-flex flex-column align-items-end gap-2">
 
                                         {{-- STATUS --}}
-                                        @if ($item->waktu_masuk)
+                                        @if ($item->check_in)
 
                                         <span class="badge bg-light-success text-success">
 

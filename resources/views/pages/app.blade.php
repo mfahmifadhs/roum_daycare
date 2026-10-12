@@ -114,7 +114,7 @@
                         </a>
                     </li>
 
-                    @if (Auth::user()->anak)
+                    <!-- @if (Auth::user()->anak)
                     <li class="pc-item">
                         <a href="{{ route('anak.detail', Auth::user()->anak->id) }}" class="pc-link">
                             <span class="pc-micon">
@@ -125,9 +125,9 @@
                             <span class="pc-mtext">Anak</span>
                         </a>
                     </li>
-                    @endif
+                    @endif -->
 
-                    <li class="pc-item">
+                    <!-- <li class="pc-item">
                         @php $linkJadwal = Auth::user()->anak ? route('peserta.detail') : '#'; @endphp
                         <a href="{{ $linkJadwal }}" class="pc-link">
                             <span class="pc-micon">
@@ -137,9 +137,9 @@
                             </span>
                             <span class="pc-mtext">Jadwal Penitipan</span>
                         </a>
-                    </li>
+                    </li> -->
 
-                    <li class="pc-item">
+                    <!-- <li class="pc-item">
                         @php $linkAbsen = Auth::user()->anak ? route('absen.detail', Auth::user()->anak->id) : '#'; @endphp
                         <a href="{{ $linkAbsen }}" class="pc-link">
                             <span class="pc-micon">
@@ -149,7 +149,7 @@
                             </span>
                             <span class="pc-mtext">Absensi Kehadiran</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
                 @endif
 
