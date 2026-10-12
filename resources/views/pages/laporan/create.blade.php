@@ -50,10 +50,6 @@
                 name="anak_id"
                 value="{{ $peserta->anak_id }}">
 
-            <input type="hidden"
-                name="pengasuh_id"
-                value="{{ $peserta->jadwal->pengasuh_id }}">
-
             <div class="row">
 
                 {{-- LEFT --}}
@@ -530,6 +526,29 @@
                             <div class="row">
 
                                 {{-- PENGASUH --}}
+
+                                <div class="col-md-12 mb-4">
+
+                                    <label class="form-label fw-semibold">
+                                        Pilih Pengasuh
+                                    </label>
+
+                                    <select class="form-select"
+                                        name="pengasuh_id">
+
+                                        <option value="">Pilih Pengasuh</option>
+
+                                        @foreach ($pengasuh as $item)
+
+                                        <option value="{{ $item->id }}">
+                                            {{ $item->nama }}
+                                        </option>
+
+                                        @endforeach
+                                    </select>
+
+                                </div>
+
                                 <div class="col-md-6 mb-4">
 
                                     <label class="form-label fw-semibold">

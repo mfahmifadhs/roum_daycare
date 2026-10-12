@@ -6,6 +6,7 @@ use App\Models\Kategori;
 use App\Models\Laporan;
 use App\Models\LaporanDetail;
 use App\Models\Peserta;
+use App\Models\Pengasuh;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,8 @@ class LaporanController extends Controller
     {
         $peserta  = Peserta::where('id', $id)->first();
         $kategori = Kategori::get();
-        return view('pages.laporan.create', compact('peserta', 'kategori'));
+        $pengasuh = Pengasuh::get();
+        return view('pages.laporan.create', compact('peserta', 'kategori', 'pengasuh'));
     }
 
     public function store(Request $request, $id)
