@@ -116,7 +116,7 @@ class AbsenController extends Controller
 
 
         // CHECK OUT
-        if (now()->gte(today()->setTime(14, 58))) {
+        if (now()->gte(today()->setTime(12, 10))) {
             if ($cekAbsen->check_in && !$cekAbsen->check_out) {
 
                 Absen::where('id', $cekAbsen->id)->update([
