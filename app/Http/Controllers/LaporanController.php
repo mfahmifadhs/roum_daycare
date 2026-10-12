@@ -170,6 +170,7 @@ class LaporanController extends Controller
         $mood = Kategori::where('kategori', 'mood')->get();
         $kondisi = Kategori::where('kategori', 'kondisi')->get();
         $perkembangan = Kategori::where('kategori', 'perkembangan')->get();
+        $pengasuh = Pengasuh::get();
 
         return view('pages.laporan.edit', compact(
             'peserta',
@@ -177,7 +178,8 @@ class LaporanController extends Controller
             'kegiatan',
             'mood',
             'kondisi',
-            'perkembangan'
+            'perkembangan',
+            'pengasuh'
         ));
     }
 
@@ -190,6 +192,7 @@ class LaporanController extends Controller
             $laporan = Laporan::findOrFail($id);
 
             $laporan->update([
+                'pengasuh_id'             => $request->pengasuh_id,
                 'minum_air'               => $request->minum_air,
                 'selera_makan'            => $request->selera_makan,
 

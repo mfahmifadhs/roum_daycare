@@ -508,6 +508,29 @@
 
                         <div class="card-body">
 
+                            <div class="col-md-12 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Pilih Pengasuh
+                                </label>
+
+                                <select class="form-select"
+                                    name="pengasuh_id">
+
+                                    <option value="">Pilih Pengasuh</option>
+
+                                    @foreach ($pengasuh as $item)
+
+                                    <option value="{{ $item->id }}"
+                                        {{ $laporan->pengasuh_id == $item->id ? 'selected' : '' }}>
+                                        {{ $laporan->pengasuh_id == $item->id ? $item->nama : $item->nama }}
+                                    </option>
+
+                                    @endforeach
+                                </select>
+
+                            </div>
+
                             <textarea class="form-control mb-4"
                                 rows="5"
                                 name="informasi_orang_tua"
@@ -536,7 +559,6 @@
 </div>
 @section('js')
 <script>
-
     $('#btnUpdateLaporan').on('click', function() {
 
         // KONFIRMASI
