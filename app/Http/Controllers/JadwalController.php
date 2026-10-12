@@ -128,7 +128,7 @@ class JadwalController extends Controller
         $jumlahHari = (int) $request->jenis_input;
 
         $hariKerja = 0;
-        $reguler = Reguler::where('status', 'true')->get();
+        $reguler = Anak::where('paket_id', 1)->get();
 
         while ($hariKerja < $jumlahHari) {
 
