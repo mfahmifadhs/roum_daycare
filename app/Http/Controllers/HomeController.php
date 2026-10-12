@@ -49,7 +49,7 @@ class HomeController extends Controller
         $data = new \stdClass();
         $data->laporan = $laporan ?? null;
 
-        return view('pages.home', compact('anak', 'jadwal', 'kategoriAnak', 'total', 'absen', 'laporan'));
+        return view('pages.home', compact('anak', 'jadwal', 'kategoriAnak', 'total', 'absen', 'laporan', 'data'));
     }
 
     public function profile()
