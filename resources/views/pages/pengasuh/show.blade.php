@@ -114,7 +114,7 @@
                             @foreach ($pengasuh as $data)
                             <tr>
                                 <td class="text-center">{{ $loop->iteration + ($pengasuh->currentPage() - 1) * $pengasuh->perPage() }}</td>
-                                <td><h6 class="mb-0">{{ $data->nama }}</h6></td>
+                                <td><h6 class="mb-0"><small>{{ $data->kode }}</small> <br> {{ $data->nama }}</h6></td>
                                 <td>{{ $data->jenis_kelamin == 'P' ? 'Perempuan' : 'Laki=laki' }}</td>
                                 <td>[{{ Carbon\Carbon::parse($data->tanggal_lahir)->isoFormat('DD MMMM Y') }}]</td>
                                 <td>{{ $data->alamat }}</td>

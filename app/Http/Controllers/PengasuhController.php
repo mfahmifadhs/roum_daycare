@@ -12,8 +12,10 @@ class PengasuhController extends Controller
         $query = Pengasuh::query();
 
         if ($request->search) {
-
-            $query->where('nama', 'like', '%' . $request->search . '%');
+            $query->where(function ($q) use ($request) {
+                $q->where('kode', 'like', '%' . $request->search . '%')
+                    ->orWhere('nama', 'like', '%' . $request->search . '%');
+            });
         }
 
         switch ($request->sort) {
