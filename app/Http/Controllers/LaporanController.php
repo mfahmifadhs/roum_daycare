@@ -7,6 +7,8 @@ use App\Models\Laporan;
 use App\Models\LaporanDetail;
 use App\Models\Peserta;
 use App\Models\Pengasuh;
+use App\Models\Jadwal;
+use App\Models\Anak;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +22,45 @@ class LaporanController extends Controller
         $pengasuh = Pengasuh::get();
         return view('pages.laporan.create', compact('peserta', 'kategori', 'pengasuh'));
     }
+
+    public function form(Request $request)
+    {
+        $jadwal = null;
+        $pengasuh = null;
+        $anak = null;
+        $peserta = null;
+        
+        if ($request->tanggal) {
+            $jadwal = Jadwal::where('tanggal', $request->tanggal)->first();
+        }
+
+        if ($request->kode_pengasuh) {
+            $pengasuh = Pengasuh::where('kode', $request->kode_pengasuh)->first();
+        }
+
+        if ($request->kode_anak) {
+            $anak = Anak::where('kode', $request->kode_anak)->first();
+        }
+
+        if ($jadwal && $anak) {
+            $peserta = Peserta::where('jadwal_id', $jadwal->id)
+                ->where('anak_id', $anak->id)
+                ->first();
+        }
+
+        return view('laporan', compact('jadwal', 'anak', 'pengasuh', 'peserta'));
+    }
+
+    
+    public function laporanCreate(Request $request, $id)
+    {
+        $peserta  = Peserta::where('id', $id)->first();
+        $kategori = Kategori::get();
+        $pengasuh = Pengasuh::where('kode', $request->kode_pengasuh)->first();
+
+        return view('laporan-create', compact('peserta', 'kategori', 'pengasuh'));
+    }
+    
 
     public function store(Request $request, $id)
     {
@@ -139,8 +180,12 @@ class LaporanController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('laporan.detail', $laporanId)
+                ->route('laporan')
                 ->with('success', 'Laporan harian berhasil disimpan');
+
+            // return redirect()
+            //     ->route('laporan.detail', $laporanId)
+            //     ->with('success', 'Laporan harian berhasil disimpan');
         } catch (\Throwable $th) {
 
             DB::rollBack();
@@ -302,8 +347,11 @@ class LaporanController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('laporan.detail', $laporan->id)
-                ->with('success', 'Laporan berhasil diperbarui');
+                ->route('laporan')
+                ->with('success', 'Laporan harian berhasil disimpan');
+            // return redirect()
+            //     ->route('laporan.detail', $laporan->id)
+            //     ->with('success', 'Laporan berhasil diperbarui');
         } catch (\Throwable $th) {
 
             DB::rollBack();

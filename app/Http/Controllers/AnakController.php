@@ -16,21 +16,18 @@ class AnakController extends Controller
     {
         $query = Anak::query();
         if ($request->search) {
+            $search = $request->search;
 
-            $query->where(function ($q) use ($request) {
-
-                $q->where('nama', 'like', '%' . $request->search . '%')
-
-                    ->orWhereHas('user', function ($user) use ($request) {
-
-                        $user->where('nama', 'like', '%' . $request->search . '%')
-
-                            ->orWhereHas('uker', function ($uker) use ($request) {
-
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', '%' . $search . '%')
+                    ->orWhere('kode', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($user) use ($search) {
+                        $user->where('nama', 'like', '%' . $search . '%')
+                            ->orWhereHas('uker', function ($uker) use ($search) {
                                 $uker->where(
                                     'nama_uker',
                                     'like',
-                                    '%' . $request->search . '%'
+                                    '%' . $search . '%'
                                 );
                             });
                     });

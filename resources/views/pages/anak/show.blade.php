@@ -90,6 +90,7 @@
 
                         <thead class="bg-light">
                             <tr>
+                                <th>No</th>
                                 <th class="ps-4">Nama</th>
                                 <th>Jenis Kelamin</th>
                                 <th>Tanggal Lahir</th>
@@ -104,9 +105,9 @@
                             <!-- User 1 -->
                             @foreach ($anak as $data)
                             <tr>
-
-                                <td><h6 class="mb-0">{{ $data->nama }}</h6></td>
-                                <td>{{ $data->jenis_kelamin == 'P' ? 'Perempuan' : 'Laki=laki' }}</td>
+                                <td class="text-center">{{ $loop->iteration + ($anak->currentPage() - 1) * $anak->perPage() }}</td>
+                                <td><h6 class="mb-0"><small>{{ $data->kode }}</small> <br> {{ $data->nama }}</h6></td>
+                                <td>{{ $data->jenis_kelamin == 'P' ? 'Perempuan' : 'Laki-laki' }}</td>
                                 <td>[{{ $data->tempat_lahir }}, {{ Carbon\Carbon::parse($data->tanggal_lahir)->isoFormat('DD MMMM Y') }}]</td>
                                 <td>{{ \Carbon\Carbon::parse($data->tanggal_lahir)->diff(now())->y }} tahun
                                     ({{ round(\Carbon\Carbon::parse($data->tanggal_lahir)->diffInMonths(now())) }} bulan)

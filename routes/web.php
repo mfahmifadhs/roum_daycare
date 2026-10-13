@@ -39,6 +39,10 @@ Route::post('register-post', [RegisterController::class, 'store'])->name('regist
 
 Route::get('getUker/{id}', [UkerController::class, 'getUker'])->name('getUker');
 
+Route::get('laporan', [LaporanController::class, 'form'])->name('laporan');
+Route::get('laporan/tambah/{id}', [LaporanController::class, 'laporanCreate'])->name('laporan.create');
+Route::post('laporan/check', [LaporanController::class, 'form'])->name('laporan.check');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::get('home',      [HomeController::class, 'index'])->name('home');
     Route::get('admin',     [AdminController::class, 'index'])->name('admin');
@@ -90,7 +94,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::post('absen/store',      [AbsenController::class, 'store'])->name('absen.store');
 
     Route::get('laporan/edit/{id}',    [LaporanController::class, 'edit'])->name('laporan.edit');
-    Route::get('laporan/create/{id}',  [LaporanController::class, 'create'])->name('laporan.create');
+    // Route::get('laporan/create/{id}',  [LaporanController::class, 'create'])->name('laporan.create');
     Route::get('laporan/detail/{id}',  [LaporanController::class, 'detail'])->name('laporan.detail');
     Route::post('laporan/store/{id}',  [LaporanController::class, 'store'])->name('laporan.store');
     Route::post('laporan/update/{id}', [LaporanController::class, 'update'])->name('laporan.update');

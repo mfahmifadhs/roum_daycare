@@ -98,6 +98,7 @@
 
                         <thead class="bg-light">
                             <tr>
+                                <th>No</th>
                                 <th class="ps-4">Users</th>
                                 <th>NIP/NIK</th>
                                 <th>Email</th>
@@ -111,7 +112,7 @@
                             <!-- User 1 -->
                             @foreach ($users as $user)
                             <tr>
-
+                                <td class="text-center">{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
                                 <td>
                                     <small>[{{ $user->role->role }}]</small>
                                     <h6 class="mb-0">{{ $user->nama }}</h6>

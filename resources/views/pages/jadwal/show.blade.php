@@ -125,6 +125,7 @@
 
                         <thead class="bg-light">
                             <tr>
+                                <th>No</th>
                                 <th class="ps-4">Tanggal</th>
                                 <th class="text-center">Kuota</th>
                                 <th>Pengasuh</th>
@@ -137,6 +138,7 @@
                             <!-- Jadwal 1 -->
                             @foreach ($jadwal as $data)
                             <tr>
+                                <td>{{ $loop->iteration + ($jadwal->currentPage() - 1) * $jadwal->perPage() }}</td>
                                 <td>
                                     {{ \Carbon\Carbon::parse($data->tanggal)->locale('id')->isoFormat('dddd') }} <br>
                                     {{ \Carbon\Carbon::parse($data->tanggal)->locale('id')->isoFormat('DD-MM-Y') }}
