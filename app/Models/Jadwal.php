@@ -19,14 +19,9 @@ class Jadwal extends Model
         'id',
         'tanggal',
         'kuota',
-        'pengasuh_id',
         'keterangan'
 
     ];
-
-    public function pengasuh() {
-        return $this->belongsTo(Pengasuh::class, 'pengasuh_id');
-    }
 
     public function peserta() {
         return $this->hasMany(Peserta::class, 'jadwal_id');

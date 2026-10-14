@@ -111,7 +111,6 @@ class JadwalController extends Controller
 
             'tanggal'      => 'required|date',
             'kuota'        => 'required|integer',
-            'pengasuh_id'  => 'required',
             'jenis_input'  => 'required',
 
         ]);
@@ -146,7 +145,6 @@ class JadwalController extends Controller
                         'id'           => $jadwalId,
                         'tanggal'      => $tanggal->format('Y-m-d'),
                         'kuota'        => $request->kuota,
-                        'pengasuh_id'  => $request->pengasuh_id,
                         'status'       => 'buka',
 
                     ]);
@@ -182,7 +180,7 @@ class JadwalController extends Controller
 
     public function edit($id)
     {
-        $jadwal = Jadwal::with('pengasuh')->findOrFail($id);
+        $jadwal = Jadwal::findOrFail($id);
         return response()->json($jadwal);
     }
 
@@ -190,8 +188,7 @@ class JadwalController extends Controller
     {
         $request->validate([
             'tanggal'      => 'required|date',
-            'kuota'        => 'required|integer',
-            'pengasuh_id'  => 'required',
+            'kuota'        => 'required|integer'
         ]);
 
         $jadwal = Jadwal::findOrFail($id);

@@ -128,7 +128,6 @@
                                 <th>No</th>
                                 <th class="ps-4">Tanggal</th>
                                 <th class="text-center">Kuota</th>
-                                <th>Pengasuh</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -144,7 +143,6 @@
                                     {{ \Carbon\Carbon::parse($data->tanggal)->locale('id')->isoFormat('DD-MM-Y') }}
                                 </td>
                                 <td class="text-center">{{ $data->peserta->count() }}/{{ $data->kuota }}</td>
-                                <td>{{ $data->pengasuh->nama ?? 'Tidak ada pengasuh' }}</td>
                                 <td class="text-center">
 
                                     <div class="dropdown">
@@ -323,23 +321,6 @@
 
                         </div>
 
-                        <!-- PENGASUH -->
-                        <div class="col-md-6 mb-4">
-
-                            <label class="form-label fw-semibold">
-                                Pengasuh
-                                <span class="text-danger">*</span>
-                            </label>
-
-                            <select class="form-select rounded-3" name="pengasuh_id" required>
-                                <option value="">Pilih Pengasuh</option>
-                                @foreach ($pengasuh as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                                @endforeach
-                            </select>
-
-                        </div>
-
                         <!-- JENIS INPUT -->
                         <div class="col-md-6 mb-4">
 
@@ -436,22 +417,6 @@
                             </label>
 
                             <input id="edit_kuota" type="number" class="form-control rounded-3" name="kuota" placeholder="Masukkan kuota" value="{{ $kuota }}" required>
-                        </div>
-
-                        <div class="col-md-12 mb-4">
-
-                            <label class="form-label fw-semibold">
-                                Pengasuh
-                                <span class="text-danger">*</span>
-                            </label>
-
-                            <select id="edit_pengasuh_id" class="form-select rounded-3" name="pengasuh_id" required>
-                                <option value="">Pilih Pengasuh</option>
-                                @foreach ($pengasuh as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                                @endforeach
-                            </select>
-
                         </div>
 
                     </div>
@@ -706,7 +671,6 @@
             $('#edit_id').val(data.id);
             $('#edit_tanggal').val(data.tanggal);
             $('#edit_kuota').val(data.kuota);
-            $('#edit_pengasuh_id').val(data.pengasuh_id);
 
             $('#modalEditJadwal').modal('show');
 

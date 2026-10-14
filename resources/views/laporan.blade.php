@@ -351,15 +351,8 @@
             </div>
             @endif
 
-            @if (session('error'))
-            <div class="alert alert-danger" role="alert">
-                <i class="fa-solid fa-circle-xmark me-2"></i>
-                {{ session('error') }}
-            </div>
-            @endif
-
             {{-- Form pencarian --}}
-            <form action="{{ route('laporan.check') }}"
+            <form id="formCheck" action="{{ route('laporan.check') }}"
                 method="POST">
                 @csrf
 
@@ -424,7 +417,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-check-data w-100">
+                <button type="submit" id="btnCheck()" class="btn btn-check-data w-100">
                     <i class="fa-solid fa-magnifying-glass me-2"></i>
                     Check Data
                 </button>
@@ -535,6 +528,70 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.getElementById('btnCheck')
+            .addEventListener('click', function() {
+
+                const form = document.getElementById('formCheck');
+
+                Swal.fire({
+                    title: 'Loading',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+                    background: '#ffffff',
+                    backdrop: `rgba(0,0,0,0.4)`,
+                    customClass: {
+                        popup: 'border-0 rounded-4 shadow-sm'
+                    }
+                });
+
+                form.requestSubmit();
+
+            });
+    </script>
+
+
+    @if (session('error'))
+    <script>
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: "{{ session('error') }}", // Diperbaiki: satu baris
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+    </script>
+    @endif
+
+    @if (session('success'))
+    <script>
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: "{{ session('success') }}", // Diperbaiki: satu baris & gunakan kutip dua
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true, // Tambahan agar lebih modern
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+    </script>
+    @endif
 
 </body>
 

@@ -48,7 +48,17 @@ class LaporanController extends Controller
                 ->first();
         }
 
-        return view('laporan', compact('jadwal', 'anak', 'pengasuh', 'peserta'));
+        if ($request->all()) {
+            if (!$peserta) {
+                return back()->with('error', 'Data Anak tidak ditemukan');
+            }
+
+            if ($peserta) {
+                return view('laporan', compact('jadwal', 'anak', 'pengasuh', 'peserta'))->with('success', 'Data Anak ditemukan');
+            }
+        }        
+
+        return view('laporan');
     }
 
     

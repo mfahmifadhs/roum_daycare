@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         rel="stylesheet">
 
-        
+
     <style>
         .swal2-container {
             z-index: 9999 !important;
@@ -827,13 +827,12 @@
                             <div class="card-body">
 
                                 @foreach ($kategori->where('kategori', 'kegiatan') as $item)
-
                                 <div class="border rounded-4 p-3 mb-3">
 
-                                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                                    <div class="row g-3 align-items-center">
 
-                                        <div>
-
+                                        {{-- Deskripsi kegiatan --}}
+                                        <div class="col-12 col-lg-4">
                                             <h6 class="mb-1 fw-semibold">
                                                 {{ $item->deskripsi }}
                                             </h6>
@@ -841,74 +840,59 @@
                                             <small class="text-muted">
                                                 {{ $item->keterangan }}
                                             </small>
-
                                         </div>
 
-                                        <div class="d-flex gap-4">
+                                        {{-- Pilihan penilaian --}}
+                                        <div class="col-12 col-lg-8">
+                                            <div class="row g-2">
 
-                                            <div class="form-check">
-                                                <input class="form-check-input"
-                                                    type="radio"
-                                                    name="kegiatan[{{ $item->id }}]"
-                                                    value="Sangat Baik">
+                                                @php
+                                                $pilihan = [
+                                                'Sangat Baik',
+                                                'Baik',
+                                                'Cukup',
+                                                'Perlu Pendampingan',
+                                                ];
+                                                @endphp
 
-                                                <label class="form-check-label">
-                                                    Sangat Baik
-                                                </label>
+                                                @foreach ($pilihan as $nilai)
+                                                <div class="col-6 col-md-3">
+                                                    <label class="border rounded-3 p-2 d-flex align-items-center gap-2 h-100 w-100"
+                                                        style="cursor: pointer;">
+
+                                                        <input
+                                                            class="form-check-input mt-0 flex-shrink-0"
+                                                            type="radio"
+                                                            name="kegiatan[{{ $item->id }}]"
+                                                            value="{{ $nilai }}">
+
+                                                        <span class="small">
+                                                            {{ $nilai == 'Perlu Pendampingan' ? 'Pendampingan' : $nilai }}
+                                                        </span>
+
+                                                    </label>
+                                                </div>
+                                                @endforeach
+
                                             </div>
-
-                                            <div class="form-check">
-                                                <input class="form-check-input"
-                                                    type="radio"
-                                                    name="kegiatan[{{ $item->id }}]"
-                                                    value="Baik">
-
-                                                <label class="form-check-label">
-                                                    Baik
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check">
-                                                <input class="form-check-input"
-                                                    type="radio"
-                                                    name="kegiatan[{{ $item->id }}]"
-                                                    value="Cukup">
-
-                                                <label class="form-check-label">
-                                                    Cukup
-                                                </label>
-                                            </div>
-
-                                            <div class="form-check">
-                                                <input class="form-check-input"
-                                                    type="radio"
-                                                    name="kegiatan[{{ $item->id }}]"
-                                                    value="Perlu Pendampingan">
-
-                                                <label class="form-check-label">
-                                                    Pendampingan
-                                                </label>
-                                            </div>
-
                                         </div>
 
                                     </div>
 
                                 </div>
-
                                 @endforeach
 
-                                <div>
-
+                                {{-- Catatan kegiatan --}}
+                                <div class="mt-4">
                                     <label class="form-label fw-semibold">
                                         Catatan Kegiatan Hari Ini
                                     </label>
 
-                                    <textarea class="form-control"
+                                    <textarea
+                                        class="form-control"
                                         rows="4"
                                         name="catatan_kegiatan"
                                         placeholder="Tambahkan catatan kegiatan anak hari ini"></textarea>
-
                                 </div>
 
                             </div>
@@ -1292,7 +1276,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
-    
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
