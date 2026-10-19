@@ -809,6 +809,78 @@
 
                         </div>
 
+                        {{-- SUHU ANAK --}}
+                        <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                            <div class="card-header bg-white border-0 pt-4">
+
+                                <h5 class="fw-bold mb-1">
+                                    Suhu Anak
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Pemantauan suhu tubuh anak
+                                </p>
+
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row g-3">
+
+                                    {{-- Suhu Saat Datang --}}
+                                    <div class="col-12 col-md-6">
+                                        <div class="border rounded-4 p-3 h-100">
+                                            <label for="suhu_datang" class="form-label fw-semibold">
+                                                <i class="fa-solid fa-temperature-half me-2 text-primary"></i>
+                                                Suhu Anak Saat Datang
+                                            </label>
+
+                                            <div class="input-group">
+                                                <input type="number"
+                                                    class="form-control"
+                                                    id="suhu_datang"
+                                                    name="suhu_datang"
+                                                    placeholder="Contoh: 36.5"
+                                                    min="30"
+                                                    max="45"
+                                                    step="0.1"
+                                                    required>
+
+                                                <span class="input-group-text">°C</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- Suhu Saat Pulang --}}
+                                    <div class="col-12 col-md-6">
+                                        <div class="border rounded-4 p-3 h-100">
+                                            <label for="suhu_pulang" class="form-label fw-semibold">
+                                                <i class="fa-solid fa-temperature-half me-2 text-danger"></i>
+                                                Suhu Anak Saat Pulang
+                                            </label>
+
+                                            <div class="input-group">
+                                                <input type="number"
+                                                    class="form-control"
+                                                    id="suhu_pulang"
+                                                    name="suhu_pulang"
+                                                    placeholder="Contoh: 36.7"
+                                                    min="30"
+                                                    max="45"
+                                                    step="0.1">
+
+                                                <span class="input-group-text">°C</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                         {{-- KEGIATAN --}}
                         <div class="card border-0 shadow-sm rounded-4 mb-4">
 

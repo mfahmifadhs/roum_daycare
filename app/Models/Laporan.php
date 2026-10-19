@@ -22,6 +22,8 @@ class Laporan extends Model
         'anak_id',
         'pengasuh_id',
         'tanggal',
+        'suhu_datang',
+        'suhu_pulang',
         'minum_air',
         'selera_makan',
         'toilet_pipis',

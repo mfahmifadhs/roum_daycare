@@ -87,6 +87,8 @@ class LaporanController extends Controller
                 'anak_id'                 => $request->anak_id,
                 'pengasuh_id'             => $request->pengasuh_id,
                 'tanggal'                 => Carbon::today(),
+                'suhu_datang'             => $request->suhu_datang,
+                'suhu_pulang'             => $request->suhu_pulang,
 
                 'minum_air'               => $request->minum_air,
                 'selera_makan'            => $request->selera_makan,
