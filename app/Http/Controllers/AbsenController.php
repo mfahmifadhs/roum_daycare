@@ -28,6 +28,14 @@ class AbsenController extends Controller
         $kode       = $request->kode;
         $tanggal    = Carbon::today()->toDateString();
         $anak       = Anak::where('kode', $kode)->first();
+    
+        if (!$anak) {
+            return back()->with(
+                'error',
+                'Peserta tidak ditemukan'
+            );
+        }
+
         $jadwal     = Jadwal::whereDate('tanggal', $tanggal)->first();
         $peserta    = Peserta::where('jadwal_id', $jadwal->id)->where('anak_id', $anak->id)->first();
 
@@ -104,7 +112,8 @@ class AbsenController extends Controller
             if ($peserta && !$peserta->waktu_masuk) {
                 Peserta::where('id', $peserta->id)->update([
                     'tanggal' => now(),
-                    'waktu_masuk' => now()
+                    'waktu_masuk' => now(),
+                    'status'    => 'true'
                 ]);
             }
 
@@ -116,7 +125,7 @@ class AbsenController extends Controller
 
 
         // CHECK OUT
-        if (now()->gte(today()->setTime(12, 10))) {
+        if (now()->gte(today()->setTime(8, 10))) {
             if ($cekAbsen->check_in && !$cekAbsen->check_out) {
 
                 Absen::where('id', $cekAbsen->id)->update([

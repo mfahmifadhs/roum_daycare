@@ -97,6 +97,7 @@
                                 <th>Usia</th>
                                 <th>Orang Tua</th>
                                 <th>Unit Kerja</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
 
@@ -114,6 +115,40 @@
                                 </td>
                                 <td>{{ $data->user->nama }}</td>
                                 <td>{{ $data->user->uker->nama_uker }}</td>
+                                <td class="text-center">
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-light btn-sm rounded-pill" data-bs-toggle="dropdown">
+                                            <i class="ti ti-dots"></i>
+                                        </button>
+
+                                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('anak.detail', $data->id) }}">
+                                                    <i class="ti ti-info-circle me-2"></i> Detail
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item btn-edit" href="{{ route('anak.edit', $data->id) }}">
+                                                    <i class="ti ti-pencil me-2"></i> Edit
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <a
+                                                    class="dropdown-item text-danger btn-delete"
+                                                    href="#"
+                                                    data-id="{{ $data->id }}"
+                                                    data-nama="{{ $data->nama }}">
+
+                                                    <i class="ti ti-trash me-2"></i>
+                                                    Hapus
+
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

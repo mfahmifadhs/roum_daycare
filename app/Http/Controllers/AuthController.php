@@ -9,7 +9,16 @@ class AuthController extends Controller
 {
     public function post(Request $request)
     {
-        $credentials = $request->only('nip', 'password');
+        $login = $request->input('nip');
+        $password = $request->input('password');
+
+        $credentials = [
+            function ($query) use ($login) {
+                $query->where('nip', $login)
+                    ->orWhere('nik', $login);
+            },
+            'password' => $password,
+        ];
 
         if (auth()->attempt($credentials)) {
             $role = Auth::user()->role_id;

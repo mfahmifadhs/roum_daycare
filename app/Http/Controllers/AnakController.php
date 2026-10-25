@@ -249,7 +249,6 @@ class AnakController extends Controller
 
             // UPDATE DATA ANAK
             $anak->update([
-
                 'nama'             => $request->nama,
                 'jenis_kelamin'    => $request->jenis_kelamin,
                 'tempat_lahir'     => $request->tempat_lahir,
@@ -260,26 +259,29 @@ class AnakController extends Controller
 
             ]);
 
+            $skrining = SkriningAnak::where('anak_id', $anak->id)->first();
+
             // UPDATE / CREATE SKRINING
-            SkriningAnak::updateOrCreate(
+            if ($skrining) {
+                SkriningAnak::updateOrCreate(
+                    [
+                        'anak_id' => $anak->id
+                    ],
 
-                [
-                    'anak_id' => $anak->id
-                ],
+                    [
+                        'berat_badan'           => $request->berat_badan,
+                        'tinggi_badan'          => $request->tinggi_badan,
+                        'alergi'                => $request->alergi,
+                        'riwayat_penyakit'      => $request->riwayat_penyakit,
+                        'kebutuhan_khusus'      => $request->kebutuhan_khusus,
+                        'konsumsi_obat'         => $request->konsumsi_obat,
+                        'riwayat_rawat_inap'    => $request->riwayat_rawat_inap,
+                        'imunisasi_dasar'       => $request->imunisasi_dasar,
+                        'catatan_orang_tua'     => $request->catatan_orang_tua
+                    ]
 
-                [
-                    'berat_badan'           => $request->berat_badan,
-                    'tinggi_badan'          => $request->tinggi_badan,
-                    'alergi'                => $request->alergi,
-                    'riwayat_penyakit'      => $request->riwayat_penyakit,
-                    'kebutuhan_khusus'      => $request->kebutuhan_khusus,
-                    'konsumsi_obat'         => $request->konsumsi_obat,
-                    'riwayat_rawat_inap'    => $request->riwayat_rawat_inap,
-                    'imunisasi_dasar'       => $request->imunisasi_dasar,
-                    'catatan_orang_tua'     => $request->catatan_orang_tua
-                ]
-
-            );
+                );
+            }
 
             DB::commit();
 

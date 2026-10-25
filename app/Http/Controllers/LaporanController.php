@@ -29,6 +29,7 @@ class LaporanController extends Controller
         $pengasuh = null;
         $anak = null;
         $peserta = null;
+        $laporan = 0;
         
         if ($request->tanggal) {
             $jadwal = Jadwal::where('tanggal', $request->tanggal)->first();
@@ -54,7 +55,15 @@ class LaporanController extends Controller
             }
 
             if ($peserta) {
-                return view('laporan', compact('jadwal', 'anak', 'pengasuh', 'peserta'))->with('success', 'Data Anak ditemukan');
+                $masuk  = $peserta->waktu_masuk;
+                $pulang = $peserta->waktu_keluar;
+                $laporan = Laporan::where('peserta_id', $peserta->id)->where('tanggal', $request->tanggal)->first();
+
+                if (!$masuk || !$pulang) {
+                    return back()->with('error', 'Belum dapat membuat laporan, Anak belum menyelesaikan absensi');
+                }
+
+                return view('laporan', compact('jadwal', 'anak', 'pengasuh', 'peserta', 'laporan'))->with('success', 'Data Anak ditemukan');
             }
         }        
 
@@ -212,6 +221,12 @@ class LaporanController extends Controller
     {
         $laporan = Laporan::where('id', $id)->first();
         return view('pages.laporan.detail', compact('laporan'));
+    }
+
+    public function homeDetail($id)
+    {
+        $laporan = Laporan::where('id', $id)->first();
+        return view('laporan-detail', compact('laporan'));
     }
 
     public function edit($id)

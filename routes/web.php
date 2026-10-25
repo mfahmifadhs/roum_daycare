@@ -40,6 +40,7 @@ Route::post('register-post', [RegisterController::class, 'store'])->name('regist
 Route::get('getUker/{id}', [UkerController::class, 'getUker'])->name('getUker');
 
 Route::get('laporan', [LaporanController::class, 'form'])->name('laporan');
+Route::get('home/laporan/detail/{id}', [LaporanController::class, 'homeDetail'])->name('home.laporan.detail');
 Route::get('laporan/tambah/{id}', [LaporanController::class, 'laporanCreate'])->name('laporan.create');
 Route::post('laporan/check', [LaporanController::class, 'form'])->name('laporan.check');
 

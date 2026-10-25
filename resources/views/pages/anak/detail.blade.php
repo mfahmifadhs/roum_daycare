@@ -437,6 +437,24 @@
                                     </tr>
                                 </thead>
 
+                                @if (!$rekapKegiatan)
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" class="text-center py-5">
+
+                                            <div class="text-muted">
+
+                                                <i class="ti ti-activity fs-1 d-block mb-2"></i>
+
+                                                Belum ada data rekap kegiatan
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                @endif
+
                                 <tbody>
 
                                     @foreach ($rekapKegiatan as $nama => $nilai)

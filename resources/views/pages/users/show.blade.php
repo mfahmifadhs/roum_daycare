@@ -100,7 +100,8 @@
                             <tr>
                                 <th>No</th>
                                 <th class="ps-4">Users</th>
-                                <th>NIP/NIK</th>
+                                <th>NIK</th>
+                                <th>NIP</th>
                                 <th>Email</th>
                                 <th>Status</th>
                                 <th class="text-center">Aksi</th>
@@ -118,6 +119,7 @@
                                     <h6 class="mb-0">{{ $user->nama }}</h6>
                                     <small class="text-muted">{{ $user->uker->nama_uker }}</small>
                                 </td>
+                                <td>{{ $user->nik }}</td>
                                 <td>{{ $user->nip }}</td>
                                 <td>[{{ $user->email }}]</td>
                                 <td>

@@ -364,8 +364,10 @@
 
     </div>
 
-    <script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
 
             const kode = document.getElementById('kode');
@@ -376,6 +378,40 @@
 
                 if (this.value.trim() !== '') {
 
+                    Swal.fire({
+
+                        width: '220px',
+                        background: 'transparent',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+
+                        customClass: {
+                            popup: 'border-0 shadow-none bg-transparent'
+                        },
+
+                        html: `
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="bg-white rounded-circle d-flex justify-content-center align-items-center shadow-lg"
+                                style="
+                                    width:110px;
+                                    height:110px;
+                                    border: 6px solid rgba(13,110,253,0.08);
+                                ">
+                                <div class="spinner-border"
+                                    role="status"
+                                    style="
+                                        width:3.8rem;
+                                        height:3.8rem;
+                                        color:#0d6efd;
+                                        border-width: .35em;
+                                    ">
+                                </div>
+                            </div>
+                        </div>
+                    `
+                    });
+
                     document.getElementById(
                         'formAbsensi'
                     ).submit();
@@ -385,8 +421,32 @@
             });
 
         });
-
     </script>
+
+    @if (session('success'))
+    <script>
+        Swal.fire({
+            toast: true,
+            icon: 'success',
+            title: `{!! session('success') !!}`,
+            showConfirmButton: false,
+            timer: 3000
+        });
+    </script>
+    @endif
+
+    @if (session('error'))
+    <script>
+        Swal.fire({
+            toast: true,
+            icon: 'error',
+            title: `{!! session('error') !!}`,
+            showConfirmButton: false,
+            confirmButtonColor: '#dc3545',
+            timer: 3000
+        });
+    </script>
+    @endif
 
 </body>
 
