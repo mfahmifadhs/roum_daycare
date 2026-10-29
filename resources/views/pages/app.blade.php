@@ -191,7 +191,7 @@
                                     <use xlink:href="#custom-calendar-1"></use>
                                 </svg>
                             </span>
-                            <span class="pc-mtext">Data Jadwal</span>
+                            <span class="pc-mtext">Data Kehadiran</span>
                         </a>
                     </li>
                     

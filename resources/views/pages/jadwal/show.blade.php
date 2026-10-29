@@ -9,9 +9,9 @@
             <div class="page-block">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <h3 class="mb-1">Daftar Jadwal</h3>
+                        <h3 class="mb-1">Daftar Kehadiran</h3>
                         <p class="text-muted mb-0">
-                            Kelola data jadwal penitipan anak
+                            Kelola data kehadiran anak
                         </p>
                     </div>
 
@@ -19,7 +19,7 @@
                         <button class="btn btn-success rounded-pill px-4 shadow-sm" data-bs-toggle="modal"
                             data-bs-target="#modalTambahJadwal">
                             <i class="ti ti-plus me-1"></i>
-                            Tambah Jadwal
+                            Tambah Kehadiran
                         </button>
                     </div>
                 </div>
@@ -257,11 +257,11 @@
                 <div>
 
                     <h4 class="fw-bold mb-1">
-                        Tambah Jadwal
+                        Tambah Kehadiran
                     </h4>
 
                     <p class="text-muted small mb-0">
-                        Tambahkan jadwal penitipan DayCare
+                        Tambahkan data kehadiran anak
                     </p>
 
                 </div>
@@ -325,7 +325,7 @@
                         <div class="col-md-6 mb-4">
 
                             <label class="form-label fw-semibold">
-                                Jenis Jadwal
+                                Jenis Kehadiran
                                 <span class="text-danger">*</span>
                             </label>
 
@@ -374,7 +374,7 @@
                     id="btnSimpanJadwal">
 
                     <i class="ti ti-device-floppy me-1"></i>
-                    Simpan Jadwal
+                    Simpan Kehadiran
 
                 </button>
 
@@ -391,7 +391,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-4">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Edit Data Jadwal</h5>
+                <h5 class="modal-title fw-bold">Edit Data Kehadiran</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
@@ -429,7 +429,7 @@
 
                 <button type="submit" class="btn btn-success rounded-pill px-4 shadow-sm" id="btnUpdate">
                     <i class="ti ti-device-floppy me-1"></i>
-                    Simpan Jadwal
+                        Simpan Kehadiran
                 </button>
             </div>
         </div>
@@ -479,7 +479,7 @@
 
             buttonsStyling: false,
 
-            title: 'Simpan Jadwal?',
+            title: 'Simpan Kehadiran?',
 
             html: `
 
@@ -499,7 +499,7 @@
                 </div>
 
                 <p class="text-muted mb-0">
-                    Jadwal penitipan akan ditambahkan ke sistem
+                    Kehadiran anak akan ditambahkan ke sistem
                 </p>
 
             </div>
@@ -512,7 +512,7 @@
 
                 Swal.fire({
 
-                    title: 'Menyimpan Jadwal...',
+                    title: 'Menyimpan Kehadiran...',
 
                     allowOutsideClick: false,
                     allowEscapeKey: false,
@@ -582,7 +582,7 @@
 
             buttonsStyling: false,
 
-            title: 'Hapus Jadwal?',
+            title: 'Hapus Kehadiran?',
 
             html: `
 
@@ -602,7 +602,7 @@
                 </div>
 
                 <p class="text-muted mb-0">
-                    Apakah Anda yakin ingin menghapus jadwal
+                    Apakah Anda yakin ingin menghapus kehadiran
                     <br>
                     <strong>${tanggal}</strong> ?
                 </p>

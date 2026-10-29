@@ -11,11 +11,11 @@
 
                     <div class="col-md-8">
                         <h3 class="mb-1 fw-bold">
-                            Detail Jadwal
+                            Detail Kehadiran
                         </h3>
 
                         <p class="text-muted mb-0">
-                            Detail jadwal penitipan dan evaluasi harian anak
+                            Detail kehadiran penitipan dan evaluasi harian anak
                         </p>
                     </div>
 
