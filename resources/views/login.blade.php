@@ -281,7 +281,7 @@
                     @csrf
                     <div class="mb-4">
                         <label class="form-label">
-                            NIP
+                            NIP / NIK
                         </label>
 
                         <input type="text" name="nip" class="form-control" placeholder="Masukkan NIP" required>
