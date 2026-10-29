@@ -186,7 +186,7 @@
                     name="tanggal"
                     value="{{ request('tanggal', old('tanggal', now()->format('Y-m-d'))) }}">
 
-                @if (!$laporan)
+                @if (!$laporan && now()->gte(today()->setTime(15, 30)) && now()->lte(today()->setTime(20, 0)))
                 <button type="submit" class="btn btn-assessment">
                     <i class="fa-solid fa-clipboard-list"></i>
                     Lakukan Penilaian
@@ -196,7 +196,7 @@
             </form>
 
             @if ($laporan)
-            <a href="{{ route('home.laporan.detail', $laporan->id) }}" class="btn btn-primary">
+            <a href="{{ route('home.laporan.detail', $laporan->id) }}" class="btn btn-assessment">
                 <i class="fa-solid fa-clipboard-list"></i>
                 Detail Penilaian
             </a>

@@ -390,63 +390,6 @@
                 </div>
             </div>
 
-            {{-- TANDA TANGAN --}}
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-header bg-white border-0 pt-4 px-3 px-md-4">
-                    <h5 class="fw-bold mb-1">Validasi Tanda Tangan</h5>
-                </div>
-
-                <div class="card-body p-3 p-md-4">
-                    <div class="row g-3 text-center">
-
-                        {{-- TTD PENGASUH --}}
-                        <div class="col-6">
-                            <div class="border rounded-4 p-2 h-100">
-                                <small class="text-muted d-block mb-3">
-                                    Pengasuh
-                                </small>
-
-                                @if ($laporan->ttd_pengasuh)
-                                    <img
-                                        src="{{ $laporan->ttd_pengasuh }}"
-                                        alt="Tanda tangan pengasuh"
-                                        class="img-fluid"
-                                        style="max-height:100px;max-width:100%;">
-                                @else
-                                    <div class="text-muted small py-3">
-                                        <i class="fa-solid fa-file-signature d-block mb-2 fs-4"></i>
-                                        Belum TTD
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                        {{-- TTD ORANG TUA --}}
-                        <div class="col-6">
-                            <div class="border rounded-4 p-2 h-100">
-                                <small class="text-muted d-block mb-3">
-                                    Orang Tua
-                                </small>
-
-                                @if ($laporan->ttd_orangtua)
-                                    <img
-                                        src="{{ $laporan->ttd_orangtua }}"
-                                        alt="Tanda tangan orang tua"
-                                        class="img-fluid"
-                                        style="max-height:100px;max-width:100%;">
-                                @else
-                                    <div class="text-muted small py-3">
-                                        <i class="fa-solid fa-file-signature d-block mb-2 fs-4"></i>
-                                        Belum TTD
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
         </div>
 
     </div>

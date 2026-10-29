@@ -34,9 +34,7 @@ class Laporan extends Model
         'catatan_makan',
         'catatan_kondisi',
         'catatan_makan_minum',
-        'catatan_toilet_training',
-        'ttd_pengasuh',
-        'ttd_orangtua',
+        'catatan_toilet_training'
 
     ];
 

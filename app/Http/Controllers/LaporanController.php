@@ -113,9 +113,6 @@ class LaporanController extends Controller
                 'catatan_kondisi'         => $request->catatan_kondisi,
                 'catatan_makan_minum'     => $request->catatan_makan_minum,
                 'catatan_toilet_training' => $request->catatan_toilet_training,
-
-                'ttd_pengasuh'            => $request->ttd_pengasuh,
-                'ttd_orangtua'           => $request->ttd_orangtua,
             ]);
 
             /*
@@ -279,9 +276,6 @@ class LaporanController extends Controller
                 'catatan_kondisi'         => $request->catatan_kondisi,
                 'catatan_makan_minum'     => $request->catatan_makan_minum,
                 'catatan_toilet_training' => $request->catatan_toilet_training,
-
-                'ttd_pengasuh'            => $request->ttd_pengasuh,
-                'ttd_orangtua'            => $request->ttd_orangtua,
             ]);
 
             /*
