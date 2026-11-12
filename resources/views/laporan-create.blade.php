@@ -723,6 +723,10 @@
                 <input type="hidden"
                     name="anak_id"
                     value="{{ $peserta->anak_id }}">
+                
+                <input type="hidden"
+                    name="pengasuh_id"
+                    value="{{ $pengasuh->id }}">
 
                 <div class="row">
 
@@ -1273,23 +1277,10 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        const canvasPengasuh = document.getElementById('signaturePengasuh');
-        const padPengasuh = new SignaturePad(canvasPengasuh);
-
-        const canvasOrangtua = document.getElementById('signatureOrangtua');
-        const padOrangtua = new SignaturePad(canvasOrangtua);
-
-        $('#clearPengasuh').click(function() {
-            padPengasuh.clear();
-        });
-
-        $('#clearOrangtua').click(function() {
-            padOrangtua.clear();
-        });
-
         $('#btnSimpanLaporan').on('click', function() {
 
             let valid = true;
+            console.log ('halo');
 
             // VALIDASI RADIO KEGIATAN
             $('[name^="kegiatan"]').each(function() {
@@ -1344,13 +1335,6 @@
 
             }
 
-            // VALIDASI TTD
-            if (padPengasuh.isEmpty() || padOrangtua.isEmpty()) {
-
-                valid = false;
-
-            }
-
             // ERROR
             if (!valid) {
 
@@ -1389,14 +1373,6 @@
             }).then((result) => {
 
                 if (result.isConfirmed) {
-
-                    $('#ttd_pengasuh').val(
-                        padPengasuh.toDataURL()
-                    );
-
-                    $('#ttd_orangtua').val(
-                        padOrangtua.toDataURL()
-                    );
 
                     Swal.fire({
 
