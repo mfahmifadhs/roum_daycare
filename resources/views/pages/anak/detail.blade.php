@@ -594,7 +594,7 @@
 
                                         <h6 class="fw-semibold mb-1">
 
-                                            {{ $item->jadwal->tanggal ? \Carbon\Carbon::parse($item->jadwal->tanggal)->translatedFormat('l, d F Y') : '-' }}
+                                            {{ $item->jadwal?->tanggal ? \Carbon\Carbon::parse($item->jadwal->tanggal)->translatedFormat('l, d F Y') : '-' }}
 
                                         </h6>
 
