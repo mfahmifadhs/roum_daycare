@@ -594,7 +594,7 @@
 
                                         <h6 class="fw-semibold mb-1">
 
-                                            {{ \Carbon\Carbon::parse($item->jadwal->tanggal)->translatedFormat('l, d F Y') }}
+                                            {{ $item->jadwal->tanggal ? \Carbon\Carbon::parse($item->jadwal->tanggal)->translatedFormat('l, d F Y') : '-' }}
 
                                         </h6>
 
@@ -607,9 +607,7 @@
                                                 Check In:
                                                 <span class="fw-medium">
 
-                                                    {{ $item->waktu_masuk
-                                        ? \Carbon\Carbon::parse($item->waktu_masuk)->format('H:i')
-                                        : '-' }}
+                                                    {{ $item->waktu_masuk ? \Carbon\Carbon::parse($item->waktu_masuk)->format('H:i') : '-' }}
 
                                                 </span>
 
