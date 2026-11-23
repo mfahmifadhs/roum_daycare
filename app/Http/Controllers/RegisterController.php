@@ -46,7 +46,11 @@ class RegisterController extends Controller
         $user->password_text = $request->input('password'); // Simpan password asli jika diperlukan
         $user->save();
 
-        return redirect()->route('login')->with('success', 'Berhasil melakukan pendaftaran');
+        if ($request->admin == 'true') {
+            return redirect()->route('users')->with('success', 'Berhasil menambahkan user baru');
+        } else {
+            return redirect()->route('login')->with('success', 'Berhasil melakukan pendaftaran');
+        }
     }
 
     public function checkNip(Request $request)

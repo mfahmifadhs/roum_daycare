@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Absen;
 use App\Models\Kategori;
 use App\Models\Laporan;
 use App\Models\LaporanDetail;
@@ -12,6 +13,7 @@ use App\Models\Anak;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanController extends Controller
 {
@@ -30,7 +32,7 @@ class LaporanController extends Controller
         $anak = null;
         $peserta = null;
         $laporan = 0;
-        
+
         if ($request->tanggal) {
             $jadwal = Jadwal::where('tanggal', $request->tanggal)->first();
         }
@@ -65,12 +67,12 @@ class LaporanController extends Controller
 
                 return view('laporan', compact('jadwal', 'anak', 'pengasuh', 'peserta', 'laporan'))->with('success', 'Data Anak ditemukan');
             }
-        }        
+        }
 
         return view('laporan');
     }
 
-    
+
     public function laporanCreate(Request $request, $id)
     {
         $peserta  = Peserta::where('id', $id)->first();
@@ -79,7 +81,7 @@ class LaporanController extends Controller
 
         return view('laporan-create', compact('peserta', 'kategori', 'pengasuh'));
     }
-    
+
 
     public function store(Request $request, $id)
     {
@@ -141,15 +143,29 @@ class LaporanController extends Controller
         |--------------------------------------------------------------------------
         */
 
-            if ($request->mood) {
-                $kategoriMood = Kategori::where('kategori', 'mood')->where('deskripsi', $request->mood)->first();
+            if ($request->mood_datang) {
+                $kategoriMood = Kategori::where('kategori', 'mood')->where('deskripsi', $request->mood_datang)->first();
 
                 LaporanDetail::create([
                     'id'           => LaporanDetail::withTrashed()->count() + 1,
                     'laporan_id'   => $laporanId,
                     'kategori_id'  => $kategoriMood->id,
-                    'nilai'        => $request->mood,
-                    'keterangan'   => 'Mood'
+                    'nilai'        => $request->mood_datang,
+                    'keterangan'   => 'Mood',
+                    'tahap'        => 'Datang'
+                ]);
+            }
+
+            if ($request->mood_pulang) {
+                $kategoriMood = Kategori::where('kategori', 'mood')->where('deskripsi', $request->mood_pulang)->first();
+
+                LaporanDetail::create([
+                    'id'           => LaporanDetail::withTrashed()->count() + 1,
+                    'laporan_id'   => $laporanId,
+                    'kategori_id'  => $kategoriMood->id,
+                    'nilai'        => $request->mood_pulang,
+                    'keterangan'   => 'Mood',
+                    'tahap'        => 'Pulang'
                 ]);
             }
 
@@ -158,17 +174,32 @@ class LaporanController extends Controller
         | KONDISI
         |--------------------------------------------------------------------------
         */
-            if ($request->kondisi_fisik) {
-
-                foreach ($request->kondisi_fisik as $kategoriId => $nilai) {
-                    $kategori = Kategori::where('kategori', 'kondisi')->where('deskripsi', $request->kondisi_fisik)->first();
+            if ($request->kondisi_fisik_datang) {
+                foreach ($request->kondisi_fisik_datang as $kategoriId => $nilai) {
+                    $kategori = Kategori::where('kategori', 'kondisi')->where('deskripsi', $request->kondisi_fisik_datang)->first();
 
                     LaporanDetail::create([
                         'id'          => LaporanDetail::withTrashed()->count() + 1,
                         'laporan_id'  => $laporanId,
                         'kategori_id' => $kategori->id,
                         'nilai'       => $nilai,
-                        'keterangan'  => 'Kondisi'
+                        'keterangan'  => 'Kondisi',
+                        'tahap'       => 'Datang'
+                    ]);
+                }
+            }
+
+            if ($request->kondisi_fisik_pulang) {
+                foreach ($request->kondisi_fisik_pulang as $kategoriId => $nilai) {
+                    $kategori = Kategori::where('kategori', 'kondisi')->where('deskripsi', $request->kondisi_fisik_pulang)->first();
+
+                    LaporanDetail::create([
+                        'id'          => LaporanDetail::withTrashed()->count() + 1,
+                        'laporan_id'  => $laporanId,
+                        'kategori_id' => $kategori->id,
+                        'nilai'       => $nilai,
+                        'keterangan'  => 'Kondisi',
+                        'tahap'       => 'Pulang'
                     ]);
                 }
             }
@@ -198,7 +229,7 @@ class LaporanController extends Controller
             DB::commit();
 
             return redirect()
-                ->route('laporan')
+                ->route('home.laporan.detail', $laporanId)
                 ->with('success', 'Laporan harian berhasil disimpan');
 
             // return redirect()
@@ -381,5 +412,228 @@ class LaporanController extends Controller
                 ->withInput()
                 ->with('error', $th->getMessage());
         }
+    }
+
+    public function cetakBulanan(Request $request, $id)
+    {
+        $request->validate([
+            'bulan' => 'required|integer|between:1,12',
+            'tahun' => 'required|integer|min:2020|max:' . (date('Y') + 1),
+        ]);
+
+        $anak = Anak::with('user')->findOrFail($id);
+
+        $bulan = (int) $request->bulan;
+        $tahun = (int) $request->tahun;
+
+        $tanggalAwal = Carbon::createFromDate($tahun, $bulan, 1)->startOfMonth();
+        $tanggalAkhir = $tanggalAwal->copy()->endOfMonth();
+
+        $start = $tanggalAwal->toDateString();
+        $end = $tanggalAkhir->toDateString();
+
+        // ==========================================
+        // 1. KEHADIRAN BULANAN
+        // ==========================================
+
+        $totalHari = $tanggalAwal->daysInMonth;
+
+        $totalHariDatang = Absen::where('anak_id', $id)
+            ->whereBetween('tanggal', [$start, $end])
+            ->distinct()
+            ->count('tanggal');
+
+        $totalHariTidakDatang = max(0, $totalHari - $totalHariDatang);
+
+        // ==========================================
+        // 2. AMBIL LAPORAN BULANAN
+        // ==========================================
+
+        $laporan = Laporan::with('detail.kategori')
+            ->where('anak_id', $id)
+            ->whereBetween('tanggal', [$start, $end])
+            ->orderBy('tanggal')
+            ->get();
+
+        $laporanIds = $laporan->pluck('id');
+
+        $detail = LaporanDetail::with('kategori')
+            ->whereIn('laporan_id', $laporanIds)
+            ->get();
+
+        // ==========================================
+        // 3. RINGKASAN AKTIVITAS BULANAN
+        // ==========================================
+
+        $aktivitas = LaporanDetail::with('kategori', 'laporan')
+            ->whereHas('kategori', function ($q) {
+                $q->where('kategori', 'kegiatan');
+            })
+            ->whereHas('laporan', function ($q) use ($id, $start, $end) {
+                $q->where('anak_id', $id)
+                    ->whereBetween('tanggal', [$start, $end]);
+            })
+            ->select(
+                'kategori_id',
+                'nilai',
+                DB::raw('COUNT(*) as total')
+            )
+            ->groupBy('kategori_id', 'nilai')
+            ->get()
+            ->groupBy('kategori_id');
+
+        $rekapAktivitas = [];
+
+        foreach ($aktivitas as $kategoriId => $items) {
+
+            $namaKegiatan = optional($items->first()->kategori)->deskripsi
+                ?? optional($items->first()->kategori)->nama
+                ?? '-';
+
+            $rekapAktivitas[] = [
+                'kegiatan'       => $namaKegiatan,
+                'sangat_baik'    => $items->where('nilai', 'Sangat Baik')->sum('total'),
+                'baik'           => $items->where('nilai', 'Baik')->sum('total'),
+                'cukup'          => $items->where('nilai', 'Cukup')->sum('total'),
+                'pendampingan'   => $items->where('nilai', 'Pendampingan')->sum('total'),
+            ];
+        }
+
+        // ==========================================
+        // 4. RINGKASAN MOOD DAN KONDISI
+        // ==========================================
+
+        $moodKondisi = $detail
+            ->filter(function ($item) {
+                return in_array(
+                    strtolower($item->kategori->kategori ?? ''),
+                    ['mood', 'kondisi']
+                );
+            })
+            ->groupBy(function ($item) {
+                return strtolower($item->kategori->kategori ?? '') . '|' .
+                    ($item->tahap ?? 'Tidak Ditentukan') . '|' .
+                    $item->nilai;
+            })
+            ->map(function ($items) {
+                return $items->count();
+            });
+
+        // ==========================================
+        // 5. RINGKASAN PERKEMBANGAN
+        // ==========================================
+
+        $perkembangan = $detail
+            ->filter(function ($item) {
+                return strtolower($item->kategori->kategori ?? '') == 'perkembangan';
+            });
+
+        $totalPenilaian = $perkembangan->count();
+
+        $totalBSB = $perkembangan->where('nilai', 'BSB')->count();
+        $totalBSH = $perkembangan->where('nilai', 'BSH')->count();
+        $totalMB  = $perkembangan->where('nilai', 'MB')->count();
+
+        // ==========================================
+        // 6. RINGKASAN MAKAN DAN MINUM
+        // ==========================================
+
+        $ringkasanMakan = $laporan
+            ->pluck('selera_makan')
+            ->filter()
+            ->countBy();
+
+        $ringkasanMinum = $laporan
+            ->pluck('minum_air')
+            ->filter()
+            ->countBy();
+
+        // ==========================================
+        // 7. RINGKASAN TOILET TRAINING
+        // ==========================================
+
+        $ringkasanPipis = $laporan
+            ->pluck('toilet_pipis')
+            ->filter()
+            ->countBy();
+
+        $ringkasanPup = $laporan
+            ->pluck('toilet_pup')
+            ->filter()
+            ->countBy();
+
+        $ringkasanPopok = $laporan
+            ->pluck('kondisi_popok')
+            ->filter()
+            ->countBy();
+
+        // ==========================================
+        // 8. INFORMASI UNTUK ORANG TUA
+        // ==========================================
+
+        $informasiOrangTua = $laporan
+            ->whereNotNull('informasi_orang_tua')
+            ->where('informasi_orang_tua', '!=', '')
+            ->values();
+
+        // ==========================================
+        // 9. CATATAN TAMBAHAN
+        // ==========================================
+
+        $catatanMakan = $laporan
+            ->whereNotNull('catatan_makan')
+            ->where('catatan_makan', '!=', '')
+            ->values();
+
+        $catatanMakanMinum = $laporan
+            ->whereNotNull('catatan_makan_minum')
+            ->where('catatan_makan_minum', '!=', '')
+            ->values();
+
+        $catatanToilet = $laporan
+            ->whereNotNull('catatan_toilet_training')
+            ->where('catatan_toilet_training', '!=', '')
+            ->values();
+
+        // ==========================================
+        // 10. GENERATE PDF
+        // ==========================================
+
+        Carbon::setLocale('id');
+
+        $namaBulan = $tanggalAwal->translatedFormat('F');
+
+        $pdf = Pdf::loadView('pages.laporan.pdf.bulanan', compact(
+            'anak',
+            'bulan',
+            'tahun',
+            'namaBulan',
+            'tanggalAwal',
+            'tanggalAkhir',
+            'totalHari',
+            'totalHariDatang',
+            'totalHariTidakDatang',
+            'laporan',
+            'aktivitas',
+            'moodKondisi',
+            'totalPenilaian',
+            'totalBSB',
+            'totalBSH',
+            'totalMB',
+            'rekapAktivitas',
+            'ringkasanMakan',
+            'ringkasanMinum',
+            'ringkasanPipis',
+            'ringkasanPup',
+            'ringkasanPopok',
+            'informasiOrangTua',
+            'catatanMakan',
+            'catatanMakanMinum',
+            'catatanToilet'
+        ))->setPaper('A4', 'portrait');
+
+        return $pdf->stream(
+            'Laporan-Bulanan-' . $anak->nama . '-' . $namaBulan . '-' . $tahun . '.pdf'
+        );
     }
 }

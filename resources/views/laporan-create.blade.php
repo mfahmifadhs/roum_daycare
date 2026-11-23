@@ -723,7 +723,7 @@
                 <input type="hidden"
                     name="anak_id"
                     value="{{ $peserta->anak_id }}">
-                
+
                 <input type="hidden"
                     name="pengasuh_id"
                     value="{{ $pengasuh->id }}">
@@ -1055,62 +1055,170 @@
                     <div class="col-lg-4">
 
                         {{-- KONDISI --}}
+
                         <div class="card border-0 shadow-sm rounded-4 mb-4">
 
                             <div class="card-header bg-white border-0 pt-4">
-
                                 <h5 class="fw-bold mb-1">
-                                    Kondisi Hari Ini
+                                    Kondisi Anak
                                 </h5>
-
+                                <p class="text-muted small mb-0">
+                                    Catat kondisi mood dan fisik anak saat datang dan pulang.
+                                </p>
                             </div>
 
                             <div class="card-body">
 
-                                <label class="form-label fw-semibold">
-                                    Mood Anak
-                                </label>
+                                {{-- KONDISI DATANG --}}
+                                <div class="border rounded-4 p-3 mb-4">
 
-                                <select class="form-select mb-4"
-                                    name="mood">
+                                    <div class="d-flex align-items-center gap-2 mb-3">
+                                        <span class="badge bg-success rounded-pill">01</span>
+                                        <h6 class="fw-bold text-success mb-0">
+                                            Kondisi Anak Saat Datang
+                                        </h6>
+                                    </div>
 
-                                    <option value="">Pilih Mood</option>
-                                    <option value="Ceria">Ceria</option>
-                                    <option value="Aktif">Aktif</option>
-                                    <option value="Tenang">Tenang</option>
-                                    <option value="Rewel">Rewel</option>
-                                    <option value="Perlu Pendampingan">Perlu Pendampingan</option>
+                                    <label class="form-label fw-semibold">
+                                        Mood Anak Datang
+                                    </label>
 
-                                </select>
+                                    <select class="form-select mb-3"
+                                        name="mood_datang">
 
-                                <label class="form-label fw-semibold">
-                                    Kondisi Fisik
-                                </label>
+                                        <option value="">Pilih Mood</option>
+                                        <option value="Ceria">Ceria</option>
+                                        <option value="Aktif">Aktif</option>
+                                        <option value="Tenang">Tenang</option>
+                                        <option value="Rewel">Rewel</option>
+                                        <option value="Perlu Pendampingan">Perlu Pendampingan</option>
 
-                                <div class="d-flex flex-column gap-2">
+                                    </select>
 
-                                    @foreach (['Sehat', 'Batuk', 'Pilek', 'Demam', 'Lecet / Luka Ringan', 'Alergi'] as $fisik)
+                                    <label class="form-label fw-semibold">
+                                        Kondisi Fisik Anak Datang
+                                    </label>
 
-                                    <div class="form-check">
+                                    <div class="row g-2">
 
-                                        <input class="form-check-input"
-                                            type="checkbox"
-                                            name="kondisi_fisik[]"
-                                            value="{{ $fisik }}">
+                                        @foreach ([
+                                        'Sehat',
+                                        'Batuk',
+                                        'Pilek',
+                                        'Demam',
+                                        'Lecet / Luka Ringan',
+                                        'Alergi'
+                                        ] as $fisik)
 
-                                        <label class="form-check-label">
-                                            {{ $fisik }}
-                                        </label>
+                                        <div class="col-6 col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input"
+                                                    type="checkbox"
+                                                    name="kondisi_fisik_datang[]"
+                                                    value="{{ $fisik }}"
+                                                    id="datang_{{ $loop->index }}">
+
+                                                <label class="form-check-label"
+                                                    for="datang_{{ $loop->index }}">
+                                                    {{ $fisik }}
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @endforeach
 
                                     </div>
 
-                                    @endforeach
+                                    <div class="mt-3">
+                                        <label class="form-label fw-semibold">
+                                            Catatan Kondisi Saat Datang
+                                        </label>
+
+                                        <textarea class="form-control"
+                                            name="catatan_datang"
+                                            rows="2"
+                                            placeholder="Catatan kondisi anak saat tiba di daycare..."></textarea>
+                                    </div>
+
+                                </div>
+
+
+                                {{-- KONDISI PULANG --}}
+                                <div class="border rounded-4 p-3">
+
+                                    <div class="d-flex align-items-center gap-2 mb-3">
+                                        <span class="badge bg-primary rounded-pill">02</span>
+                                        <h6 class="fw-bold text-primary mb-0">
+                                            Kondisi Anak Saat Pulang
+                                        </h6>
+                                    </div>
+
+                                    <label class="form-label fw-semibold">
+                                        Mood Anak Pulang
+                                    </label>
+
+                                    <select class="form-select mb-3"
+                                        name="mood_pulang">
+
+                                        <option value="">Pilih Mood</option>
+                                        <option value="Ceria">Ceria</option>
+                                        <option value="Aktif">Aktif</option>
+                                        <option value="Tenang">Tenang</option>
+                                        <option value="Rewel">Rewel</option>
+                                        <option value="Perlu Pendampingan">Perlu Pendampingan</option>
+
+                                    </select>
+
+                                    <label class="form-label fw-semibold">
+                                        Kondisi Fisik Anak Pulang
+                                    </label>
+
+                                    <div class="row g-2">
+
+                                        @foreach ([
+                                        'Sehat',
+                                        'Batuk',
+                                        'Pilek',
+                                        'Demam',
+                                        'Lecet / Luka Ringan',
+                                        'Alergi'
+                                        ] as $fisik)
+
+                                        <div class="col-6 col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input"
+                                                    type="checkbox"
+                                                    name="kondisi_fisik_pulang[]"
+                                                    value="{{ $fisik }}"
+                                                    id="pulang_{{ $loop->index }}">
+
+                                                <label class="form-check-label"
+                                                    for="pulang_{{ $loop->index }}">
+                                                    {{ $fisik }}
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        @endforeach
+
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <label class="form-label fw-semibold">
+                                            Catatan Kondisi Saat Pulang
+                                        </label>
+
+                                        <textarea class="form-control"
+                                            name="catatan_pulang"
+                                            rows="2"
+                                            placeholder="Catatan kondisi anak sebelum pulang..."></textarea>
+                                    </div>
 
                                 </div>
 
                             </div>
-
                         </div>
+
 
                         {{-- MAKAN --}}
                         <div class="card border-0 shadow-sm rounded-4 mb-4">
@@ -1280,7 +1388,7 @@
         $('#btnSimpanLaporan').on('click', function() {
 
             let valid = true;
-            console.log ('halo');
+            console.log('halo');
 
             // VALIDASI RADIO KEGIATAN
             $('[name^="kegiatan"]').each(function() {
@@ -1310,7 +1418,8 @@
 
             // VALIDASI SELECT & INPUT
             const requiredFields = [
-                'mood',
+                'mood_datang',
+                'mood_pulang',
                 'minum_air',
                 'selera_makan',
                 'toilet_pipis',
@@ -1329,7 +1438,7 @@
             });
 
             // VALIDASI KONDISI FISIK
-            if (!$('input[name="kondisi_fisik[]"]:checked').length) {
+            if (!$('input[name="kondisi_fisik_datang[]"]:checked').length || !$('input[name="kondisi_fisik_pulang[]"]:checked').length) {
 
                 valid = false;
 

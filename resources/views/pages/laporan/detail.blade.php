@@ -241,63 +241,217 @@
             {{-- RIGHT --}}
             <div class="col-lg-4">
 
-                {{-- KONDISI --}}
+                {{-- KONDISI ANAK DATANG DAN PULANG --}}
+                @php
+                // Mendukung data lama yang belum memiliki tahap
+                $detailDatang = $laporan->detail->filter(function ($item) {
+                return is_null($item->tahap) || $item->tahap == 'Datang';
+                });
+
+                $detailPulang = $laporan->detail->where('tahap', 'Pulang');
+
+                $moodDatang = $detailDatang
+                ->where('keterangan', 'Mood')
+                ->first();
+
+                $moodPulang = $detailPulang
+                ->where('keterangan', 'Mood')
+                ->first();
+
+                $kondisiDatang = $detailDatang
+                ->where('keterangan', 'Kondisi');
+
+                $kondisiPulang = $detailPulang
+                ->where('keterangan', 'Kondisi');
+                @endphp
+
                 <div class="card border-0 shadow-sm rounded-4 mb-4">
 
-                    <div class="card-header bg-white border-0 pt-4">
-
+                    <div class="card-header bg-white border-0 pt-4 px-3 px-md-4">
                         <h5 class="fw-bold mb-1">
-                            Kondisi Hari Ini
+                            Kondisi Anak
                         </h5>
-
+                        <p class="text-muted small mb-0">
+                            Perbandingan kondisi anak saat datang dan pulang.
+                        </p>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body p-3 p-md-4">
 
-                        {{-- MOOD --}}
-                        <div class="mb-4">
+                        {{-- KONDISI DATANG --}}
+                        <div class="border rounded-4 p-3 mb-4">
 
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="badge bg-success rounded-pill">
+                                    <i class="ti ti-login"></i>
+                                </span>
+
+                                <h6 class="fw-bold text-success mb-0">
+                                    Kondisi Anak Saat Datang
+                                </h6>
+                            </div>
+
+                            {{-- MOOD DATANG --}}
                             <label class="text-muted small d-block mb-2">
                                 Mood Anak
                             </label>
 
-                            @php
-                            $mood = $laporan->detail->where('keterangan', 'Mood')->first();
-                            @endphp
-
-                            <span class="badge bg-success">
-
-                                {{ $mood->nilai ?? '-' }}
-
+                            @if ($moodDatang)
+                            <span class="badge bg-success rounded-pill px-3 py-2">
+                                {{ $moodDatang->nilai }}
                             </span>
+                            @else
+                            <span class="text-muted small">
+                                Belum diisi
+                            </span>
+                            @endif
 
-                        </div>
+                            <hr>
 
-                        {{-- KONDISI --}}
-                        <div>
-
+                            {{-- KONDISI FISIK DATANG --}}
                             <label class="text-muted small d-block mb-2">
                                 Kondisi Fisik
                             </label>
 
                             <div class="d-flex flex-wrap gap-2">
 
-                                @foreach ($laporan->detail->where('keterangan', 'Kondisi') as $item)
-
-                                <span class="badge bg-light-danger text-danger">
-
+                                @forelse ($kondisiDatang as $item)
+                                <span class="badge bg-light-success text-success rounded-pill px-3 py-2">
                                     {{ $item->nilai }}
+                                </span>
+                                @empty
+                                <span class="text-muted small">
+                                    Belum ada data kondisi fisik.
+                                </span>
+                                @endforelse
 
+                            </div>
+
+                        </div>
+
+
+                        {{-- KONDISI PULANG --}}
+                        <div class="border rounded-4 p-3">
+
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="badge bg-primary rounded-pill">
+                                    <i class="ti ti-logout"></i>
                                 </span>
 
-                                @endforeach
+                                <h6 class="fw-bold text-primary mb-0">
+                                    Kondisi Anak Saat Pulang
+                                </h6>
+                            </div>
+
+                            {{-- MOOD PULANG --}}
+                            <label class="text-muted small d-block mb-2">
+                                Mood Anak
+                            </label>
+
+                            @if ($moodPulang)
+                            <span class="badge bg-primary rounded-pill px-3 py-2">
+                                {{ $moodPulang->nilai }}
+                            </span>
+                            @else
+                            <span class="text-muted small">
+                                Belum diisi
+                            </span>
+                            @endif
+
+                            <hr>
+
+                            {{-- KONDISI FISIK PULANG --}}
+                            <label class="text-muted small d-block mb-2">
+                                Kondisi Fisik
+                            </label>
+
+                            <div class="d-flex flex-wrap gap-2">
+
+                                @forelse ($kondisiPulang as $item)
+                                <span class="badge bg-light-primary text-primary rounded-pill px-3 py-2">
+                                    {{ $item->nilai }}
+                                </span>
+                                @empty
+                                <span class="text-muted small">
+                                    Belum ada data kondisi fisik.
+                                </span>
+                                @endforelse
 
                             </div>
 
                         </div>
 
                     </div>
+                </div>
 
+                {{-- SUHU ANAK --}}
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-white border-0 pt-4 px-3 px-md-4">
+                        <h5 class="fw-bold mb-1">
+                            <i class="fa-solid fa-temperature-half me-2"
+                                style="color:var(--primary)"></i>
+                            Suhu Anak
+                        </h5>
+                        <p class="text-muted small mb-0">
+                            Pemantauan suhu saat datang dan pulang.
+                        </p>
+                    </div>
+
+                    <div class="card-body p-3 p-md-4">
+
+                        {{-- SUHU DATANG --}}
+                        <div class="border rounded-4 p-3 mb-3">
+                            <div class="d-flex align-items-center gap-3">
+
+                                <div class="rounded-3 bg-light d-flex align-items-center justify-content-center flex-shrink-0"
+                                    style="width:44px;height:44px;">
+                                    <i class="fa-solid fa-sun text-warning"></i>
+                                </div>
+
+                                <div class="flex-grow-1">
+                                    <div class="text-muted small mb-1">
+                                        Suhu Saat Datang
+                                    </div>
+
+                                    <div class="fs-4 fw-bold">
+                                        @if ($laporan->suhu_datang !== null)
+                                        {{ number_format((float) $laporan->suhu_datang, 1, ',', '.') }} °C
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        {{-- SUHU PULANG --}}
+                        <div class="border rounded-4 p-3">
+                            <div class="d-flex align-items-center gap-3">
+
+                                <div class="rounded-3 bg-light d-flex align-items-center justify-content-center flex-shrink-0"
+                                    style="width:44px;height:44px;">
+                                    <i class="fa-solid fa-sun text-warning"></i>
+                                </div>
+
+                                <div class="flex-grow-1">
+                                    <div class="text-muted small mb-1">
+                                        Suhu Saat Pulang
+                                    </div>
+
+                                    <div class="fs-4 fw-bold">
+                                        @if ($laporan->suhu_pulang !== null)
+                                        {{ number_format((float) $laporan->suhu_pulang, 1, ',', '.') }} °C
+                                        @else
+                                        <span class="text-muted">-</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
                 {{-- MAKAN --}}

@@ -20,7 +20,8 @@ class LaporanDetail extends Model
         'laporan_id',
         'kategori_id',
         'nilai',
-        'keterangan'
+        'keterangan',
+        'tahap'
     ];
 
     public function laporan() {

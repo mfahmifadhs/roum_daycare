@@ -43,6 +43,7 @@ Route::get('laporan', [LaporanController::class, 'form'])->name('laporan');
 Route::get('home/laporan/detail/{id}', [LaporanController::class, 'homeDetail'])->name('home.laporan.detail');
 Route::get('laporan/tambah/{id}', [LaporanController::class, 'laporanCreate'])->name('laporan.create');
 Route::post('laporan/check', [LaporanController::class, 'form'])->name('laporan.check');
+Route::post('laporan/store/{id}',  [LaporanController::class, 'store'])->name('laporan.store');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('home',      [HomeController::class, 'index'])->name('home');
@@ -97,7 +98,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('laporan/edit/{id}',    [LaporanController::class, 'edit'])->name('laporan.edit');
     // Route::get('laporan/create/{id}',  [LaporanController::class, 'create'])->name('laporan.create');
     Route::get('laporan/detail/{id}',  [LaporanController::class, 'detail'])->name('laporan.detail');
-    Route::post('laporan/store/{id}',  [LaporanController::class, 'store'])->name('laporan.store');
+    Route::get('laporan/bulanan/{id}', [LaporanController::class, 'cetakBulanan'])->name('laporan.bulanan');
     Route::post('laporan/update/{id}', [LaporanController::class, 'update'])->name('laporan.update');
 
     Route::get('peserta/detail',  [PesertaController::class, 'detail'])->name('peserta.detail');

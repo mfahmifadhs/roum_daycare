@@ -19,7 +19,7 @@ class DashboardController extends Controller
     {
         $today = Carbon::today();
 
-        
+
         $total = new \stdClass();
         $total->anak     = Anak::count();
         $total->pengasuh = Pengasuh::count();
@@ -73,18 +73,21 @@ class DashboardController extends Controller
             ->take(5)
             ->get()
             ->map(function ($item) {
-
-                return (object)[
-                    'judul' => 'Laporan harian ' . $item->anak->nama . ' telah dibuat',
-                    'created_at' => $item->created_at
+                return [
+                    'judul' => 'Laporan harian ' . ($item->anak->nama ?? '-')
+                        . ' telah dibuat',
+                    'created_at' => $item->created_at,
                 ];
             });
 
-        $aktivitas = $checkin
-            ->merge($checkout)
-            ->merge($laporan)
+        $aktivitas = collect()
+            ->concat($checkin)
+            ->concat($checkout)
+            ->concat($laporan)
             ->sortByDesc('created_at')
-            ->take(10);
+            ->take(10)
+            ->values();
+
 
         $moodAnak = LaporanDetail::select(
             'nilai',

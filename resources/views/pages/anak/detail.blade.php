@@ -114,152 +114,347 @@
 
                             </div>
 
+                            <div>
+                                <small class="text-muted d-block">
+                                    Laporan
+                                </small>
+
+                                <span class="fw-semibold">
+                                    <a href="javascript:void(0)"
+                                        class="text-decoration-none"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalLaporanBulanan">
+                                        <i class="ti ti-calendar-month me-1"></i>
+                                        Laporan Bulanan
+                                    </a>
+                                </span>
+                            </div>
+
+
+
                         </div>
 
                     </div>
 
                 </div>
 
-                {{-- MENU NAVIGASI --}}
                 <div class="card border-0 shadow-sm rounded-4 mb-4">
 
                     <div class="card-header bg-white border-0 pt-4">
 
-                        <h5 class="fw-bold mb-1">
-                            Menu Penilaian Anak
-                        </h5>
+                        <div class="d-flex justify-content-between align-items-center">
 
-                        <p class="text-muted small mb-0">
-                            Navigasi cepat rekap dan riwayat anak
-                        </p>
+                            <div>
+
+                                <h5 class="fw-bold mb-1">
+                                    Ringkasan Mood Anak
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Mayoritas anak menunjukkan mood
+                                    <b>{{ $rekap->moodAnak->first()?->nilai }}</b>
+                                </p>
+
+                            </div>
+
+                            <span class="badge bg-light-success text-success">
+
+                                {{ $rekap->totalMood }} Penilaian
+
+                            </span>
+
+                        </div>
 
                     </div>
 
                     <div class="card-body">
 
-                        <div class="d-grid gap-3">
+                        <div class="d-flex flex-column gap-4">
 
-                            {{-- REKAP KEGIATAN --}}
-                            <a href="#rekapKegiatan"
-                                class="btn btn-light rounded-4 text-start p-3 border">
+                            @foreach ($rekap->moodAnak as $mood)
 
-                                <div class="d-flex align-items-center">
+                            @php
+                            $persentase = $rekap->totalMood > 0
+                            ? round(($mood->total / $rekap->totalMood) * 100)
+                            : 0;
+                            @endphp
 
-                                    <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
-                                        style="width:45px;height:45px;">
+                            <div>
 
-                                        <i class="ti ti-activity text-success fs-5"></i>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
 
-                                    </div>
+                                    <div class="fw-semibold">
 
-                                    <div class="ms-3">
-
-                                        <div class="fw-semibold text-dark">
-                                            Rekap Kegiatan Harian
-                                        </div>
-
-                                        <small class="text-muted">
-                                            Ringkasan aktivitas harian anak
-                                        </small>
+                                        {{ $mood->nilai }}
 
                                     </div>
 
-                                </div>
+                                    <div class="small text-muted">
 
-                            </a>
-
-                            {{-- REKAP PERKEMBANGAN --}}
-                            <a href="#rekapPerkembangan"
-                                class="btn btn-light rounded-4 text-start p-3 border">
-
-                                <div class="d-flex align-items-center">
-
-                                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
-                                        style="width:45px;height:45px;">
-
-                                        <i class="ti ti-chart-line text-primary fs-5"></i>
-
-                                    </div>
-
-                                    <div class="ms-3">
-
-                                        <div class="fw-semibold text-dark">
-                                            Rekap Perkembangan Anak
-                                        </div>
-
-                                        <small class="text-muted">
-                                            Monitoring perkembangan anak
-                                        </small>
+                                        {{ $mood->total }} Anak
+                                        ({{ $persentase }}%)
 
                                     </div>
 
                                 </div>
 
-                            </a>
-
-                            {{-- REKAP PENILAIAN --}}
-                            <a href="#riwayatPenilaian"
-                                class="btn btn-light rounded-4 text-start p-3 border">
-
-                                <div class="d-flex align-items-center">
-
-                                    <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
-                                        style="width:45px;height:45px;">
-
-                                        <i class="ti ti-notebook text-warning fs-5"></i>
-
+                                <div class="progress rounded-pill" style="height: 10px;">
+                                    <div class="progress-bar bg-success rounded-pill"
+                                        data-width="{{ $persentase }}">
                                     </div>
-
-                                    <div class="ms-3">
-
-                                        <div class="fw-semibold text-dark">
-                                            Rekap Riwayat Penilaian
-                                        </div>
-
-                                        <small class="text-muted">
-                                            Daftar seluruh evaluasi harian
-                                        </small>
-
-                                    </div>
-
                                 </div>
 
-                            </a>
+                            </div>
 
-                            {{-- RIWAYAT PENITIPAN --}}
-                            <a href="#riwayatPenitipan"
-                                class="btn btn-light rounded-4 text-start p-3 border">
-
-                                <div class="d-flex align-items-center">
-
-                                    <div class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
-                                        style="width:45px;height:45px;">
-
-                                        <i class="ti ti-calendar-check text-info fs-5"></i>
-
-                                    </div>
-
-                                    <div class="ms-3">
-
-                                        <div class="fw-semibold text-dark">
-                                            Riwayat Penitipan Anak
-                                        </div>
-
-                                        <small class="text-muted">
-                                            Kehadiran dan jadwal penitipan
-                                        </small>
-
-                                    </div>
-
-                                </div>
-
-                            </a>
+                            @endforeach
 
                         </div>
 
                     </div>
 
                 </div>
+
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                    <div class="card-header bg-white border-0 pt-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <h5 class="fw-bold mb-1">
+                                    Ringkasan Kondisi Anak
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Kondisi kesehatan anak selama periode berjalan
+                                </p>
+
+                            </div>
+
+                            <span class="badge bg-light-primary text-primary">
+
+                                {{ $rekap->totalKondisi }} Penilaian
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        {{-- KONDISI DOMINAN --}}
+                        @if ($rekap->kondisiAnak->first())
+
+                        <div class="bg-light rounded-4 p-3 mb-4">
+
+                            <small class="text-muted d-block mb-1">
+                                Kondisi Dominan
+                            </small>
+
+                            <h4 class="fw-bold mb-0 text-primary">
+
+                                {{ $rekap->kondisiAnak->first()->nilai }}
+
+                            </h4>
+
+                        </div>
+
+                        @endif
+
+                        {{-- LIST KONDISI --}}
+                        <div class="d-flex flex-column gap-4">
+
+                            @foreach ($rekap->kondisiAnak as $kondisi)
+
+                            @php
+                            $persentase = $rekap->totalKondisi > 0
+                            ? round(($kondisi->total / $rekap->totalKondisi) * 100)
+                            : 0;
+                            @endphp
+
+                            <div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+
+                                    <div class="fw-semibold">
+
+                                        {{ $kondisi->nilai }}
+
+                                    </div>
+
+                                    <div class="small text-muted">
+
+                                        {{ $kondisi->total }} Anak
+                                        ({{ $persentase }}%)
+
+                                    </div>
+
+                                </div>
+
+                                <div class="progress rounded-pill" style="height: 10px;">
+                                    <div class="progress-bar bg-success rounded-pill"
+                                        data-width="{{ $persentase }}">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {{-- PERKEMBANGAN ANAK --}}
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+
+                    <div class="card-header bg-white border-0 pt-4">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <h5 class="fw-bold mb-1">
+                                    Ringkasan Perkembangan Anak
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Hasil evaluasi perkembangan harian anak
+                                </p>
+
+                            </div>
+
+                            <span class="badge bg-light-warning text-warning">
+
+                                {{ $rekap->perkembanganAnak->count() }} Aspek
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="d-flex flex-column gap-4">
+
+                            @foreach ($rekap->perkembanganAnak as $item)
+
+                            @php
+
+                            if ($item->rata_nilai >= 2.5) {
+
+                            $hasil = 'BSB';
+                            $persentase = 100;
+
+                            } elseif ($item->rata_nilai >= 1.5) {
+
+                            $hasil = 'BSH';
+                            $persentase = 75;
+
+                            } else {
+
+                            $hasil = 'MB';
+                            $persentase = 45;
+
+                            }
+
+                            @endphp
+
+                            <div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+
+                                    <div>
+
+                                        <div class="fw-semibold">
+
+                                            {{ $item->kategori->deskripsi }}
+
+                                        </div>
+
+                                        <small class="text-muted">
+
+                                            {{ $item->total }} Penilaian
+
+                                        </small>
+
+                                    </div>
+
+                                    <span class="badge
+                        @if($hasil == 'BSB')
+                            bg-light-success text-success
+                        @elseif($hasil == 'BSH')
+                            bg-light-primary text-primary
+                        @else
+                            bg-light-warning text-warning
+                        @endif">
+
+                                        {{ $hasil }}
+
+                                    </span>
+
+                                </div>
+
+                                <div class="progress rounded-pill"
+                                    style="height:10px;">
+
+                                    <div class="progress-bar
+                        @if($hasil == 'BSB')
+                            bg-success
+                        @elseif($hasil == 'BSH')
+                            bg-primary
+                        @else
+                            bg-warning
+                        @endif"
+                                        data-width="{{ $persentase }}">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            @endforeach
+
+                        </div>
+
+                        {{-- KETERANGAN --}}
+                        <div class="mt-4 border-top pt-3">
+
+                            <div class="d-flex flex-wrap gap-3 small text-muted">
+
+                                <div>
+                                    <span class="badge bg-warning me-1">MB</span>
+                                    Mulai Berkembang
+                                </div>
+
+                                <div>
+                                    <span class="badge bg-primary me-1">BSH</span>
+                                    Berkembang Sesuai Harapan
+                                </div>
+
+                                <div>
+                                    <span class="badge bg-success me-1">BSB</span>
+                                    Berkembang Sangat Baik
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {{-- RIGHT --}}
+            <div class="col-lg-8">
 
                 {{-- SKRINING --}}
                 <div class="card border-0 shadow-sm rounded-4">
@@ -408,10 +603,6 @@
 
                 </div>
 
-            </div>
-
-            {{-- RIGHT --}}
-            <div class="col-lg-8" style="max-height:calc(200vh - 120px); overflow-y:auto;">
                 <div class="card border-0 shadow-sm rounded-4 mb-4" id="rekapKegiatan">
                     <div class="card-header bg-white border-0 pt-4">
 
@@ -650,7 +841,7 @@
 
                                         @if ($item->laporan->count())
 
-                                        <a href=""
+                                        <a href="{{ route('laporan.detail', $item->laporan->first()->id) }}"
                                             class="btn btn-success btn-sm rounded-pill px-3">
 
                                             <i class="ti ti-file-description me-1"></i>
@@ -718,7 +909,91 @@
 
     </div>
 </div>
+
+
+<div class="modal fade" id="modalLaporanBulanan" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+
+            <div class="modal-header border-0 pb-0">
+                <div>
+                    <h5 class="modal-title fw-bold">
+                        <i class="ti ti-file-description text-success me-2"></i>
+                        Laporan Bulanan
+                    </h5>
+                    <small class="text-muted">
+                        Pilih periode laporan anak yang ingin dicetak.
+                    </small>
+                </div>
+
+                <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body p-4">
+
+                <form action="{{ route('laporan.bulanan', $anak->id) }}"
+                    method="GET"
+                    target="_blank">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Pilih Bulan
+                        </label>
+
+                        <select name="bulan" class="form-select rounded-3" required>
+                            @foreach (range(1, 12) as $bulan)
+                            <option value="{{ $bulan }}"
+                                {{ $bulan == now()->month ? 'selected' : '' }}>
+                                {{ \Carbon\Carbon::create()->month($bulan)->translatedFormat('F') }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            Pilih Tahun
+                        </label>
+
+                        <select name="tahun" class="form-select rounded-3" required>
+                            @for ($tahun = now()->year; $tahun >= now()->year - 5; $tahun--)
+                            <option value="{{ $tahun }}"
+                                {{ $tahun == now()->year ? 'selected' : '' }}>
+                                {{ $tahun }}
+                            </option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button"
+                            class="btn btn-light rounded-pill px-4"
+                            data-bs-dismiss="modal">
+                            Batal
+                        </button>
+
+                        <button type="submit"
+                            class="btn btn-success rounded-pill px-4">
+                            <i class="ti ti-printer me-1"></i>
+                            Cetak Laporan
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @section('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.49.1/apexcharts.min.js"></script>
 <script>
     $('#filterKehadiran, #filterPenilaian').on('change', function() {
 
@@ -759,6 +1034,18 @@
 
         }
 
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.progress-bar[data-width]').forEach(function(bar) {
+            let width = parseInt(bar.dataset.width, 10) || 0;
+
+            width = Math.min(100, Math.max(0, width));
+
+            bar.style.width = width + '%';
+        });
     });
 </script>
 @endsection

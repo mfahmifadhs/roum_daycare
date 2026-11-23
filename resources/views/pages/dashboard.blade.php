@@ -432,12 +432,10 @@
 
                                 </div>
 
-                                <div class="progress rounded-pill"
-                                    style="height:10px;">
-
+                                <div class="progress rounded-pill" style="height: 10px;">
                                     <div class="progress-bar bg-success rounded-pill"
-                                        style="width: '{{ $persentase }}%'"></div>
-
+                                        data-width="{{ $persentase }}">
+                                    </div>
                                 </div>
 
                             </div>
@@ -530,12 +528,10 @@
 
                                 </div>
 
-                                <div class="progress rounded-pill"
-                                    style="height:10px;">
-
-                                    <div class="progress-bar bg-primary rounded-pill"
-                                        style="width: '{{ $persentase }}%'"></div>
-
+                                <div class="progress rounded-pill" style="height: 10px;">
+                                    <div class="progress-bar bg-success rounded-pill"
+                                        data-width="{{ $persentase }}">
+                                    </div>
                                 </div>
 
                             </div>
@@ -650,7 +646,7 @@
                         @else
                             bg-warning
                         @endif"
-                                        style="width: '{{ $persentase }}%'">
+                                        data-width="{{ $persentase }}">
 
                                     </div>
 
@@ -774,6 +770,18 @@
     );
 
     chart.render();
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.progress-bar[data-width]').forEach(function(bar) {
+            let width = parseInt(bar.dataset.width, 10) || 0;
+
+            width = Math.min(100, Math.max(0, width));
+
+            bar.style.width = width + '%';
+        });
+    });
 </script>
 @endsection
 @endsection

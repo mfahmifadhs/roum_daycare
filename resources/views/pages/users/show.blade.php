@@ -234,6 +234,7 @@
             <div class="modal-body p-4">
                 <form id="formTambahUser" action="{{ route('register.post') }}" method="POST">
                     @csrf
+                    <input type="hidden" name="admin" value="true">
                     <div class="row">
                         <!-- ROLE & UNIT -->
                         <div class="col-md-6 mb-3">
@@ -556,85 +557,80 @@
     });
 </script>
 
+
 <script>
-    document.getElementById('btnDaftar')
-        .addEventListener('click', function() {
+    document.getElementById('btnDaftar').addEventListener('click', function(e) {
 
-            const form = document.getElementById('formTambahUser');
+        e.preventDefault();
 
-            // VALIDASI
-            if (!form.checkValidity()) {
+        const form = document.getElementById('formTambahUser');
 
-                form.reportValidity();
+        // VALIDASI FORM
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
 
-                return;
+        // KONFIRMASI SIMPAN
+        Swal.fire({
+            title: 'Simpan Data User?',
+            text: 'Pastikan data user sudah benar',
+            icon: 'question',
+
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Simpan',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+
+            customClass: {
+                popup: 'rounded-4',
+                confirmButton: 'btn btn-success rounded-pill px-4',
+                cancelButton: 'btn btn-light rounded-pill px-4 me-2'
+            },
+
+            buttonsStyling: false,
+            backdrop: 'rgba(0,0,0,0.5)',
+
+            didOpen: () => {
+                document.querySelector('.swal2-container').style.zIndex = '2000';
+            }
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                // TAMPILKAN LOADING
+                Swal.fire({
+                    title: 'Memproses...',
+                    text: 'Sedang menyimpan data user',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+
+                    background: '#ffffff',
+                    customClass: {
+                        popup: 'border-0 rounded-4 shadow-sm'
+                    },
+
+                    didClose: () => {
+                        // Tidak ada aksi
+                    }
+                });
+
+                // SUBMIT FORM
+                form.submit();
 
             }
 
-            Swal.fire({
-
-                title: 'Simpan Data User?',
-
-                text: 'Pastikan data user sudah benar',
-
-                icon: 'question',
-
-                showCancelButton: true,
-
-                confirmButtonText: 'Ya, Simpan',
-                cancelButtonText: 'Batal',
-
-                reverseButtons: true,
-
-                customClass: {
-
-                    popup: 'rounded-4',
-
-                    confirmButton: 'btn btn-success rounded-pill px-4',
-                    cancelButton: 'btn btn-light rounded-pill px-4 me-2'
-
-                },
-
-                buttonsStyling: false,
-
-                // AGAR MUNCUL DI ATAS MODAL
-                backdrop: `
-            rgba(0,0,0,0.5)
-        `,
-
-                didOpen: () => {
-
-                    document.querySelector('.swal2-container')
-                        .style.zIndex = '2000';
-
-                }
-
-            }).then((result) => {
-
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'Proses',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        showConfirmButton: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                        background: '#ffffff',
-                        backdrop: `rgba(0,0,0,0.4)`,
-                        customClass: {
-                            popup: 'border-0 rounded-4 shadow-sm'
-                        }
-                    });
-
-                    form.requestSubmit();
-
-                }
-
-            });
-
         });
+
+    });
 </script>
+
 
 <script>
     $(document).ready(function() {

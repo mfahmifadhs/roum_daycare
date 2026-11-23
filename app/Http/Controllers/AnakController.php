@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Anak;
 use App\Models\Laporan;
+use App\Models\LaporanDetail;
 use App\Models\SkriningAnak;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -59,9 +61,15 @@ class AnakController extends Controller
 
         $anak = $query->paginate(10);
 
+        $orangTua = User::where('role_id', 4)
+            ->orderBy('nama')
+            ->get();
+
+
         $data = new \stdClass();
 
-        return view('pages.anak.show', compact('anak', 'data'));
+
+        return view('pages.anak.show', compact('anak', 'data', 'orangTua'));
     }
 
     public function store(Request $request)
@@ -89,7 +97,7 @@ class AnakController extends Controller
             'id'                => Anak::withTrashed()->count() + 1,
             'kode'              => random_int(11111, 99999),
             'user_id'           => auth()->id(),
-            'paket_id'          => null,
+            'paket_id'          => 1,
             'nama'              => $request->nama,
             'tempat_lahir'      => $request->tempat_lahir,
             'tanggal_lahir'     => $request->tanggal_lahir,
@@ -102,19 +110,21 @@ class AnakController extends Controller
 
 
         // SIMPAN SKRINING
-        SkriningAnak::create([
-            'id'                   => SkriningAnak::withTrashed()->count() + 1,
-            'anak_id'              => $anak->id,
-            'berat_badan'          => $request->berat_badan,
-            'tinggi_badan'         => $request->tinggi_badan,
-            'alergi'               => $request->alergi,
-            'riwayat_penyakit'     => $request->riwayat_penyakit,
-            'kebutuhan_khusus'     => $request->kebutuhan_khusus,
-            'konsumsi_obat'        => $request->konsumsi_obat,
-            'riwayat_rawat_inap'   => $request->riwayat_rawat_inap,
-            'imunisasi_dasar'      => $request->imunisasi_dasar,
-            'catatan_orang_tua'    => $request->catatan_orang_tua,
-        ]);
+        if ($request->skrining == 'true') {
+            SkriningAnak::create([
+                'id'                   => SkriningAnak::withTrashed()->count() + 1,
+                'anak_id'              => $anak->id,
+                'berat_badan'          => $request->berat_badan,
+                'tinggi_badan'         => $request->tinggi_badan,
+                'alergi'               => $request->alergi,
+                'riwayat_penyakit'     => $request->riwayat_penyakit,
+                'kebutuhan_khusus'     => $request->kebutuhan_khusus,
+                'konsumsi_obat'        => $request->konsumsi_obat,
+                'riwayat_rawat_inap'   => $request->riwayat_rawat_inap,
+                'imunisasi_dasar'      => $request->imunisasi_dasar,
+                'catatan_orang_tua'    => $request->catatan_orang_tua,
+            ]);
+        }
 
         return redirect()
             ->back()
@@ -214,7 +224,68 @@ class AnakController extends Controller
             }
         }
 
-        return view('pages.anak.detail', compact('anak', 'rekapKegiatan', 'rekapPerkembangan'));
+        $moodAnak = LaporanDetail::select(
+            'nilai',
+            DB::raw('count(*) as total')
+        )
+            ->whereHas('kategori', function ($q) {
+                $q->where('kategori', 'mood');
+            })
+            ->whereHas('laporan', function ($q) use ($id) {
+                $q->where('anak_id', $id);
+            })
+            ->groupBy('nilai')
+            ->orderByDesc('total')
+            ->get();
+
+        $totalMood = $moodAnak->sum('total');
+
+        $kondisiAnak = LaporanDetail::select(
+            'nilai',
+            DB::raw('count(*) as total')
+        )
+            ->whereHas('kategori', function ($q) {
+                $q->where('kategori', 'kondisi');
+            })
+            ->whereHas('laporan', function ($q) use ($id) {
+                $q->where('anak_id', $id);
+            })
+            ->groupBy('nilai')
+            ->orderByDesc('total')
+            ->get();
+
+        $totalKondisi = $kondisiAnak->sum('total');
+
+        $perkembanganAnak = LaporanDetail::select(
+            'kategori_id',
+            DB::raw('AVG(
+            CASE
+                WHEN nilai = "MB" THEN 1
+                WHEN nilai = "BSH" THEN 2
+                WHEN nilai = "BSB" THEN 3
+                ELSE 0
+            END
+        ) as rata_nilai'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->with('kategori')
+            ->whereHas('kategori', function ($q) {
+                $q->where('kategori', 'perkembangan');
+            })
+            ->whereHas('laporan', function ($q) use ($id) {
+                $q->where('anak_id', $id);
+            })
+            ->groupBy('kategori_id')
+            ->get();
+
+        $rekap = new \stdClass();
+        $rekap->moodAnak = $moodAnak;
+        $rekap->totalMood = $totalMood;
+        $rekap->kondisiAnak = $kondisiAnak;
+        $rekap->totalKondisi = $totalKondisi;
+        $rekap->perkembanganAnak = $perkembanganAnak;
+
+        return view('pages.anak.detail', compact('anak', 'rekap', 'rekapKegiatan', 'rekapPerkembangan'));
     }
 
     public function edit($id)
@@ -262,26 +333,25 @@ class AnakController extends Controller
             $skrining = SkriningAnak::where('anak_id', $anak->id)->first();
 
             // UPDATE / CREATE SKRINING
-            if ($skrining) {
-                SkriningAnak::updateOrCreate(
-                    [
-                        'anak_id' => $anak->id
-                    ],
+            SkriningAnak::updateOrCreate(
+                [
+                    'anak_id' => $anak->id
+                ],
 
-                    [
-                        'berat_badan'           => $request->berat_badan,
-                        'tinggi_badan'          => $request->tinggi_badan,
-                        'alergi'                => $request->alergi,
-                        'riwayat_penyakit'      => $request->riwayat_penyakit,
-                        'kebutuhan_khusus'      => $request->kebutuhan_khusus,
-                        'konsumsi_obat'         => $request->konsumsi_obat,
-                        'riwayat_rawat_inap'    => $request->riwayat_rawat_inap,
-                        'imunisasi_dasar'       => $request->imunisasi_dasar,
-                        'catatan_orang_tua'     => $request->catatan_orang_tua
-                    ]
+                [
+                    'id'                    => $skrining ? $skrining->id : SkriningAnak::withTrashed()->count() + 1,
+                    'berat_badan'           => $request->berat_badan,
+                    'tinggi_badan'          => $request->tinggi_badan,
+                    'alergi'                => $request->alergi,
+                    'riwayat_penyakit'      => $request->riwayat_penyakit,
+                    'kebutuhan_khusus'      => $request->kebutuhan_khusus,
+                    'konsumsi_obat'         => $request->konsumsi_obat,
+                    'riwayat_rawat_inap'    => $request->riwayat_rawat_inap,
+                    'imunisasi_dasar'       => $request->imunisasi_dasar,
+                    'catatan_orang_tua'     => $request->catatan_orang_tua
+                ]
 
-                );
-            }
+            );
 
             DB::commit();
 

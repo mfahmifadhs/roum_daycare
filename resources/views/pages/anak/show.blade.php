@@ -14,6 +14,14 @@
                             Kelola data anak penitipan anak
                         </p>
                     </div>
+
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                        <button class="btn btn-success rounded-pill px-4 shadow-sm" data-bs-toggle="modal"
+                            data-bs-target="#modalTambahAnak">
+                            <i class="ti ti-plus me-1"></i>
+                            Tambah Anak
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -107,7 +115,9 @@
                             @foreach ($anak as $data)
                             <tr>
                                 <td class="text-center">{{ $loop->iteration + ($anak->currentPage() - 1) * $anak->perPage() }}</td>
-                                <td><h6 class="mb-0"><small>{{ $data->kode }}</small> <br> {{ $data->nama }}</h6></td>
+                                <td>
+                                    <h6 class="mb-0"><small>{{ $data->kode }}</small> <br> {{ $data->nama }}</h6>
+                                </td>
                                 <td>{{ $data->jenis_kelamin == 'P' ? 'Perempuan' : 'Laki-laki' }}</td>
                                 <td>[{{ $data->tempat_lahir }}, {{ Carbon\Carbon::parse($data->tanggal_lahir)->isoFormat('DD MMMM Y') }}]</td>
                                 <td>{{ \Carbon\Carbon::parse($data->tanggal_lahir)->diff(now())->y }} tahun
@@ -194,6 +204,185 @@
     </div>
 </div>
 
+<!-- MODAL TAMBAH ANAK -->
+<div class="modal fade" id="modalTambahAnak" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+
+            <!-- HEADER -->
+            <div class="modal-header border-0 pb-0">
+                <div>
+                    <h5 class="modal-title fw-bold">Tambah Data Anak</h5>
+                    <p class="text-muted small mb-0">
+                        Lengkapi informasi anak dan pilih orang tua yang bersangkutan.
+                    </p>
+                </div>
+
+                <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close">
+                </button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body p-4">
+
+                <form id="formTambahAnak"
+                    action="{{ route('anak.store') }}"
+                    method="POST"
+                    enctype="multipart/form-data">
+
+                    @csrf
+
+                    <div class="row">
+
+                        <!-- ORANG TUA -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label fw-semibold">
+                                Orang Tua <span class="text-danger">*</span>
+                            </label>
+
+                            <select class="form-select rounded-3"
+                                name="user_id"
+                                required>
+
+                                <option value="">Pilih Orang Tua</option>
+
+                                @foreach ($orangTua as $item)
+                                <option value="{{ $item->id }}">
+                                    {{ $item->nama }}
+                                    @if(!empty($item->nip))
+                                    - {{ $item->nip }}
+                                    @endif
+                                </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <hr class="my-2">
+                            <h6 class="fw-bold mb-3">Data Diri Anak</h6>
+                        </div>
+
+                        <!-- NAMA -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                Nama Lengkap Anak <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="text"
+                                class="form-control rounded-3"
+                                name="nama"
+                                placeholder="Masukkan nama lengkap anak"
+                                required>
+                        </div>
+
+                        <!-- JENIS KELAMIN -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                Jenis Kelamin <span class="text-danger">*</span>
+                            </label>
+
+                            <select class="form-select rounded-3"
+                                name="jenis_kelamin"
+                                required>
+
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
+
+                            </select>
+                        </div>
+
+                        <!-- TEMPAT LAHIR -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                Tempat Lahir
+                            </label>
+
+                            <input type="text"
+                                class="form-control rounded-3"
+                                name="tempat_lahir"
+                                placeholder="Contoh: Jakarta">
+                        </div>
+
+                        <!-- TANGGAL LAHIR -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                Tanggal Lahir <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="date"
+                                class="form-control rounded-3"
+                                name="tanggal_lahir"
+                                max="{{ date('Y-m-d') }}"
+                                required>
+                        </div>
+
+                        <!-- GOLONGAN DARAH -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                Golongan Darah
+                            </label>
+
+                            <select class="form-select rounded-3"
+                                name="golongan_darah">
+
+                                <option value="">Pilih Golongan Darah</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="AB">AB</option>
+                                <option value="O">O</option>
+
+                            </select>
+                        </div>
+
+                        <!-- FOTO -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">
+                                Foto Anak
+                            </label>
+
+                            <input type="file"
+                                class="form-control rounded-3"
+                                name="foto"
+                                id="fotoAnak"
+                                accept=".jpg,.jpeg,.png">
+
+                            <small class="text-muted">
+                                Format JPG, JPEG, PNG. Maksimal 2 MB.
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="d-flex justify-content-end gap-2 mt-3">
+
+                        <button type="button"
+                            class="btn btn-light rounded-pill px-4"
+                            data-bs-dismiss="modal">
+                            Batal
+                        </button>
+
+                        <button type="button"
+                            class="btn btn-success rounded-pill px-4 shadow"
+                            id="btnSimpanAnak">
+                            <i class="ti ti-device-floppy me-1"></i>
+                            Simpan Data
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 @section('js')
 <script>
     document.getElementById('searchInput').addEventListener('keyup', function() {
@@ -215,6 +404,58 @@
         });
 
     });
+</script>
+
+<script>
+    document.getElementById('btnSimpanAnak')
+        .addEventListener('click', function() {
+
+            const form = document.getElementById('formTambahAnak');
+
+            // Validasi form
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            Swal.fire({
+                title: 'Simpan Data Anak?',
+                text: 'Pastikan data anak dan orang tua sudah benar.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Simpan',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                customClass: {
+                    popup: 'rounded-4',
+                    confirmButton: 'btn btn-success rounded-pill px-4',
+                    cancelButton: 'btn btn-light rounded-pill px-4 me-2'
+                },
+                buttonsStyling: false,
+                returnFocus: false,
+                didOpen: () => {
+                    document.querySelector('.swal2-container').style.zIndex = '2000';
+                }
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    Swal.fire({
+                        title: 'Menyimpan Data...',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        returnFocus: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    form.requestSubmit();
+                }
+
+            });
+        });
 </script>
 @endsection
 @endsection
